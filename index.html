@@ -1,0 +1,2487 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Student Career & Learning Hub | AI Energy Planner & Opportunity Finder</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        display: ['Plus Jakarta Sans', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#eef2ff',
+                            100: '#e0e7ff',
+                            400: '#818cf8',
+                            500: '#6366f1',
+                            600: '#4f46e5',
+                            700: '#4338ca',
+                            900: '#1e1b4b',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Custom Scrollbars & Glassmorphism Utilities */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: rgba(15, 23, 42, 0.2);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(99, 102, 241, 0.4);
+            border-radius: 9999px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(99, 102, 241, 0.7);
+        }
+
+        .glass-card {
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+
+        /* Smooth transitions */
+        .tab-transition {
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* Dedicated Print Stylesheet for Clean PDF Timetable Export */
+        @media print {
+            body {
+                background: #ffffff !important;
+                color: #0f172a !important;
+                font-size: 12pt;
+            }
+            .no-print {
+                display: none !important;
+            }
+            .print-only {
+                display: block !important;
+            }
+            .print-container {
+                box-shadow: none !important;
+                border: 1px solid #cbd5e1 !important;
+                background: #ffffff !important;
+                color: #0f172a !important;
+                width: 100% !important;
+                max-width: 100% !important;
+                margin: 0 !important;
+                padding: 16px !important;
+            }
+            .print-item {
+                border-bottom: 1px solid #e2e8f0 !important;
+                page-break-inside: avoid;
+                background: #ffffff !important;
+                color: #0f172a !important;
+            }
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100 font-sans min-h-screen flex flex-col selection:bg-indigo-500 selection:text-white transition-colors duration-200">
+
+    <!-- ==========================================
+         TOP NAVIGATION BAR (NO-PRINT)
+         ========================================== -->
+    <header class="no-print sticky top-0 z-40 border-b border-slate-200/80 dark:border-slate-800/80 bg-white/85 dark:bg-slate-900/85 glass-card">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-wrap items-center justify-between py-3 gap-3">
+                <!-- Brand Identity -->
+                <div class="flex items-center gap-3">
+                    <div class="w-11 h-11 rounded-2xl bg-gradient-to-br from-indigo-600 via-violet-600 to-cyan-500 flex items-center justify-center text-white shadow-lg shadow-indigo-500/30">
+                        <i class="fa-solid fa-bolt-lightning text-lg"></i>
+                    </div>
+                    <div>
+                        <div class="flex items-center gap-2">
+                            <h1 class="font-display font-bold text-lg sm:text-xl tracking-tight text-slate-900 dark:text-white">
+                                Smart Student <span class="text-transparent bg-clip-text bg-gradient-to-r from-indigo-500 to-cyan-400">Career & Learning Hub</span>
+                            </h1>
+                            <span class="hidden md:inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 border border-indigo-500/20">
+                                <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span> v2.5 AI Engine
+                            </span>
+                        </div>
+                        <p class="text-xs text-slate-500 dark:text-slate-400">Circadian Energy Scheduler &bull; Dynamic Resource & Internship Finder</p>
+                    </div>
+                </div>
+
+                <!-- Right Controls: Quick Student Mode Badge, Reset Demo, Theme Toggle -->
+                <div class="flex items-center gap-2 sm:gap-3">
+                    <!-- Active Mode Pill -->
+                    <button id="headerStudentModeBtn" onclick="app.toggleStudentTypeQuick()" title="Click to switch Student Mode" class="flex items-center gap-2 px-3 py-1.5 rounded-xl text-xs font-semibold bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 border border-slate-200/80 dark:border-slate-700 transition">
+                        <i id="headerModeIcon" class="fa-solid fa-user-graduate text-indigo-500"></i>
+                        <span id="headerModeText">College / Univ</span>
+                        <i class="fa-solid fa-repeat text-[10px] opacity-60"></i>
+                    </button>
+
+                    <!-- Print / PDF Quick Action -->
+                    <button onclick="app.printSchedule()" class="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20 transition">
+                        <i class="fa-solid fa-file-pdf"></i>
+                        <span>Print / PDF</span>
+                    </button>
+
+                    <!-- Reset Demo Data -->
+                    <button onclick="app.resetDemoData()" title="Restore sample portfolio data" class="px-3 py-1.5 rounded-xl text-xs font-medium bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700 transition">
+                        <i class="fa-solid fa-rotate-left mr-1"></i>Reset Demo
+                    </button>
+
+                    <!-- Dark/Light Theme Toggle -->
+                    <button id="themeToggleBtn" onclick="app.toggleTheme()" aria-label="Toggle color theme" class="w-9 h-9 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 flex items-center justify-center text-slate-700 dark:text-amber-400 border border-slate-200 dark:border-slate-700 transition">
+                        <i id="themeIcon" class="fa-solid fa-sun"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Navigation Tabs -->
+            <nav class="flex items-center gap-2 overflow-x-auto py-2 no-scrollbar border-t border-slate-100 dark:border-slate-800/60" aria-label="Main Modules">
+                <button onclick="app.switchTab('planner')" id="tabBtn-planner" class="tab-btn flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs sm:text-sm font-semibold whitespace-nowrap transition-all">
+                    <i class="fa-solid fa-calendar-check"></i>
+                    <span>1. AI Daily Energy Planner</span>
+                </button>
+                <button onclick="app.switchTab('resources')" id="tabBtn-resources" class="tab-btn flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs sm:text-sm font-semibold whitespace-nowrap transition-all">
+                    <i class="fa-solid fa-compass"></i>
+                    <span>2. Smart Resource & Career Hub</span>
+                    <span id="resourceTabBadge" class="ml-1 px-2 py-0.5 text-[10px] rounded-full bg-indigo-500/20 text-indigo-400 font-mono">Internships</span>
+                </button>
+                <button onclick="app.switchTab('portfolio')" id="tabBtn-portfolio" class="tab-btn flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs sm:text-sm font-semibold whitespace-nowrap transition-all">
+                    <i class="fa-solid fa-id-card-clip"></i>
+                    <span>3. Portfolio & Export Suite</span>
+                </button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- ==========================================
+         MAIN CONTENT CONTAINER
+         ========================================== -->
+    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
+
+        <!-- ==========================================
+             MODULE 1: PERSONALISED AI DAILY PLANNER & ENERGY SCHEDULER
+             ========================================== -->
+        <section id="tabContent-planner" class="space-y-6">
+
+            <!-- Top KPI Summary Strip (No-Print) -->
+            <div class="no-print grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+                <div class="p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 shadow-sm flex items-center gap-3.5">
+                    <div class="w-11 h-11 rounded-xl bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 flex items-center justify-center text-lg shrink-0">
+                        <i class="fa-solid fa-battery-full"></i>
+                    </div>
+                    <div>
+                        <p class="text-xs text-slate-500 dark:text-slate-400 font-medium">Energy Alignment</p>
+                        <div class="flex items-baseline gap-1.5">
+                            <span id="kpiEnergyScore" class="font-display font-bold text-xl sm:text-2xl text-slate-900 dark:text-white">94%</span>
+                            <span class="text-[11px] text-emerald-500 font-semibold">Optimal</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 shadow-sm flex items-center gap-3.5">
+                    <div class="w-11 h-11 rounded-xl bg-cyan-500/10 text-cyan-600 dark:text-cyan-400 flex items-center justify-center text-lg shrink-0">
+                        <i class="fa-solid fa-clock"></i>
+                    </div>
+                    <div>
+                        <p class="text-xs text-slate-500 dark:text-slate-400 font-medium">Scheduled Focus</p>
+                        <div class="flex items-baseline gap-1.5">
+                            <span id="kpiFocusHours" class="font-display font-bold text-xl sm:text-2xl text-slate-900 dark:text-white">5.5h</span>
+                            <span id="kpiFreeBuffer" class="text-[11px] text-slate-400 font-mono">/ 8.0h free</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 shadow-sm flex items-center gap-3.5">
+                    <div class="w-11 h-11 rounded-xl bg-amber-500/10 text-amber-600 dark:text-amber-400 flex items-center justify-center text-lg shrink-0">
+                        <i class="fa-solid fa-fire-flame-curved"></i>
+                    </div>
+                    <div>
+                        <p class="text-xs text-slate-500 dark:text-slate-400 font-medium">Peak Chronotype</p>
+                        <p id="kpiPeakLabel" class="font-display font-bold text-base sm:text-lg text-slate-900 dark:text-white truncate">Morning Lark</p>
+                    </div>
+                </div>
+
+                <div class="p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 shadow-sm flex items-center gap-3.5">
+                    <div class="w-11 h-11 rounded-xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center text-lg shrink-0">
+                        <i class="fa-solid fa-check-double"></i>
+                    </div>
+                    <div>
+                        <p class="text-xs text-slate-500 dark:text-slate-400 font-medium">Habit & Task Progress</p>
+                        <div class="flex items-baseline gap-1.5">
+                            <span id="kpiHabitProgress" class="font-display font-bold text-xl sm:text-2xl text-slate-900 dark:text-white">60%</span>
+                            <span class="text-[11px] text-emerald-500 font-semibold">12 Day Streak</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Main Planner Grid: Left Column (Profile + Task Builder) & Right Column (Generated Smart Timetable) -->
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+
+                <!-- LEFT COLUMN: Profile Config & Task Input (5 cols on lg) -->
+                <div class="no-print lg:col-span-5 space-y-6">
+
+                    <!-- Card 1: Student Profile & Circadian Energy Parameters -->
+                    <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200/80 dark:border-slate-800 p-5 shadow-sm">
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="flex items-center gap-2.5">
+                                <span class="w-8 h-8 rounded-lg bg-indigo-500/10 text-indigo-500 flex items-center justify-center">
+                                    <i class="fa-solid fa-sliders"></i>
+                                </span>
+                                <div>
+                                    <h2 class="font-display font-bold text-base text-slate-900 dark:text-white">Student Profile & Circadian Setup</h2>
+                                    <p class="text-xs text-slate-500 dark:text-slate-400">Calibrates the AI scheduler & career hub</p>
+                                </div>
+                            </div>
+                            <span class="text-[11px] font-mono px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-slate-500">Auto-Saved</span>
+                        </div>
+
+                        <div class="space-y-4">
+                            <!-- Name & Academic Stage -->
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                <div>
+                                    <label for="profileName" class="block text-xs font-semibold text-slate-600 dark:text-slate-300 mb-1">Student Name</label>
+                                    <input type="text" id="profileName" oninput="app.updateProfileFromUI()" placeholder="e.g., Aarav Sharma" class="w-full px-3 py-2 rounded-xl text-sm bg-slate-50 dark:bg-slate-800/90 border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                                </div>
+                                <div>
+                                    <label for="profileType" class="block text-xs font-semibold text-slate-600 dark:text-slate-300 mb-1">Academic Level</label>
+                                    <select id="profileType" onchange="app.updateProfileFromUI()" class="w-full px-3 py-2 rounded-xl text-sm bg-slate-50 dark:bg-slate-800/90 border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 font-medium">
+                                        <option value="college">🎓 College / University</option>
+                                        <option value="school">🎒 School Student (K-12)</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <!-- Primary Interest Track -->
+                            <div>
+                                <label for="profileInterest" class="block text-xs font-semibold text-slate-600 dark:text-slate-300 mb-1">Primary Field of Interest (Syncs with Career Hub)</label>
+                                <select id="profileInterest" onchange="app.updateProfileFromUI()" class="w-full px-3 py-2 rounded-xl text-sm bg-slate-50 dark:bg-slate-800/90 border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                                    <option value="cs_ai">💻 Computer Science & IT</option>
+                                    <option value="ece">📡 Electronics & Communication (ECE)</option>
+                                    <option value="eee">⚡ Electrical & Electronics (EEE)</option>
+                                    <option value="mech">⚙️ Mechanical Engineering</option>
+                                    <option value="civil">🏗️ Civil Engineering</option>
+                                    <option value="chem">🧪 Chemical Engineering</option>
+                                    <option value="biotech">🧬 Biotechnology</option>
+                                    <option value="aero">🚀 Aerospace Engineering</option>
+                                    <option value="math_data">📊 Mathematics & Data Science</option>
+                                    <option value="business">📈 Business, Product & Finance</option>
+                                    <option value="literature">📚 Literature, Policy & Humanities</option>
+                                    <option value="design">🎨 Creative Arts & Design</option>
+                                </select>
+                            </div>
+
+                            <!-- Wake-up & Sleep Time -->
+                            <div class="grid grid-cols-2 gap-3">
+                                <div>
+                                    <label for="wakeTime" class="block text-xs font-semibold text-slate-600 dark:text-slate-300 mb-1">
+                                        <i class="fa-regular fa-sun text-amber-500 mr-1"></i>Wake-up Time
+                                    </label>
+                                    <input type="time" id="wakeTime" onchange="app.updateProfileFromUI()" class="w-full px-3 py-2 rounded-xl text-sm font-mono bg-slate-50 dark:bg-slate-800/90 border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                                </div>
+                                <div>
+                                    <label for="sleepTime" class="block text-xs font-semibold text-slate-600 dark:text-slate-300 mb-1">
+                                        <i class="fa-solid fa-moon text-indigo-400 mr-1"></i>Sleep Target
+                                    </label>
+                                    <input type="time" id="sleepTime" onchange="app.updateProfileFromUI()" class="w-full px-3 py-2 rounded-xl text-sm font-mono bg-slate-50 dark:bg-slate-800/90 border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                                </div>
+                            </div>
+
+                            <!-- Fixed Commitments (Classes / Lectures) -->
+                            <div class="p-3 rounded-xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200/70 dark:border-slate-700/70 space-y-2.5">
+                                <div class="flex items-center justify-between">
+                                    <label for="hasFixedBlock" class="text-xs font-semibold text-slate-700 dark:text-slate-200 flex items-center gap-2 cursor-pointer">
+                                        <i class="fa-solid fa-building-columns text-indigo-500"></i>
+                                        <span>Include Fixed School / College Hours</span>
+                                    </label>
+                                    <input type="checkbox" id="hasFixedBlock" onchange="app.updateProfileFromUI()" class="w-4 h-4 accent-indigo-600 rounded cursor-pointer">
+                                </div>
+                                <div id="fixedBlockInputs" class="grid grid-cols-2 gap-2 pt-1">
+                                    <div>
+                                        <span class="block text-[11px] text-slate-500 dark:text-slate-400 mb-0.5">Start Time</span>
+                                        <input type="time" id="fixedStart" onchange="app.updateProfileFromUI()" class="w-full px-2.5 py-1.5 rounded-lg text-xs font-mono bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700">
+                                    </div>
+                                    <div>
+                                        <span class="block text-[11px] text-slate-500 dark:text-slate-400 mb-0.5">End Time</span>
+                                        <input type="time" id="fixedEnd" onchange="app.updateProfileFromUI()" class="w-full px-2.5 py-1.5 rounded-lg text-xs font-mono bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Peak Energy Window Selector -->
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-600 dark:text-slate-300 mb-2">
+                                    <i class="fa-solid fa-bolt text-amber-400 mr-1"></i>Peak Cognitive Energy Window (Matches High-Priority Tasks)
+                                </label>
+                                <div class="grid grid-cols-3 gap-2">
+                                    <button type="button" onclick="app.setPeakEnergy('morning')" id="peakBtn-morning" class="peak-btn p-2.5 rounded-xl border text-center transition flex flex-col items-center gap-1">
+                                        <i class="fa-solid fa-mug-hot text-sm"></i>
+                                        <span class="text-xs font-semibold">Morning</span>
+                                        <span class="text-[10px] opacity-75 font-mono">07:00-12:00</span>
+                                    </button>
+                                    <button type="button" onclick="app.setPeakEnergy('afternoon')" id="peakBtn-afternoon" class="peak-btn p-2.5 rounded-xl border text-center transition flex flex-col items-center gap-1">
+                                        <i class="fa-solid fa-sun text-sm"></i>
+                                        <span class="text-xs font-semibold">Afternoon</span>
+                                        <span class="text-[10px] opacity-75 font-mono">12:00-17:00</span>
+                                    </button>
+                                    <button type="button" onclick="app.setPeakEnergy('evening')" id="peakBtn-evening" class="peak-btn p-2.5 rounded-xl border text-center transition flex flex-col items-center gap-1">
+                                        <i class="fa-solid fa-moon text-sm"></i>
+                                        <span class="text-xs font-semibold">Evening</span>
+                                        <span class="text-[10px] opacity-75 font-mono">17:00-22:00</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Card 2: Task & Goal Management -->
+                    <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200/80 dark:border-slate-800 p-5 shadow-sm">
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="flex items-center gap-2.5">
+                                <span class="w-8 h-8 rounded-lg bg-emerald-500/10 text-emerald-500 flex items-center justify-center">
+                                    <i class="fa-solid fa-list-check"></i>
+                                </span>
+                                <div>
+                                    <h2 class="font-display font-bold text-base text-slate-900 dark:text-white">Task & Goal Queue</h2>
+                                    <p class="text-xs text-slate-500 dark:text-slate-400">Ranked & slotted by AI Energy Engine</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-1.5">
+                                <button onclick="app.loadPresetTasks('exam')" title="Load Exam Crunch Preset" class="px-2.5 py-1 rounded-lg text-[11px] font-semibold bg-indigo-500/10 hover:bg-indigo-500/20 text-indigo-600 dark:text-indigo-400 transition">
+                                    + Preset
+                                </button>
+                                <button onclick="app.clearAllTasks()" title="Clear all tasks" class="px-2.5 py-1 rounded-lg text-[11px] font-semibold bg-rose-500/10 hover:bg-rose-500/20 text-rose-600 dark:text-rose-400 transition">
+                                    Clear
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Add Task Form -->
+                        <form id="addTaskForm" onsubmit="app.handleAddTask(event)" class="space-y-3 mb-4 p-3.5 rounded-xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200/70 dark:border-slate-700/70">
+                            <div>
+                                <label for="taskTitle" class="block text-xs font-semibold text-slate-600 dark:text-slate-300 mb-1">Task / Learning Goal Title</label>
+                                <input type="text" id="taskTitle" required placeholder="e.g., Implement Graph BFS/DFS or Read Chapter 4" class="w-full px-3 py-2 rounded-xl text-sm bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                            </div>
+
+                            <div class="grid grid-cols-3 gap-2">
+                                <div>
+                                    <label for="taskDuration" class="block text-[11px] font-semibold text-slate-500 dark:text-slate-400 mb-1">Duration</label>
+                                    <select id="taskDuration" class="w-full px-2.5 py-2 rounded-xl text-xs font-mono bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700">
+                                        <option value="30">30 mins</option>
+                                        <option value="45">45 mins</option>
+                                        <option value="60" selected>60 mins (1h)</option>
+                                        <option value="90">90 mins (1.5h)</option>
+                                        <option value="120">120 mins (2h)</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label for="taskPriority" class="block text-[11px] font-semibold text-slate-500 dark:text-slate-400 mb-1">Priority</label>
+                                    <select id="taskPriority" class="w-full px-2.5 py-2 rounded-xl text-xs font-medium bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700">
+                                        <option value="High">🔥 High (Peak)</option>
+                                        <option value="Medium" selected>⚡ Medium</option>
+                                        <option value="Low">🌱 Low</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label for="taskCategory" class="block text-[11px] font-semibold text-slate-500 dark:text-slate-400 mb-1">Category</label>
+                                    <select id="taskCategory" class="w-full px-2.5 py-2 rounded-xl text-xs font-medium bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700">
+                                        <option value="Study">📘 Study</option>
+                                        <option value="Skills">💻 Skills</option>
+                                        <option value="Wellness">🧘 Wellness</option>
+                                        <option value="Chores">🧹 Chores</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <button type="submit" class="w-full py-2.5 px-4 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-semibold text-xs sm:text-sm shadow-md shadow-indigo-500/20 flex items-center justify-center gap-2 transition">
+                                <i class="fa-solid fa-wand-magic-sparkles"></i>
+                                <span>Add & Auto-Optimize Schedule</span>
+                            </button>
+                        </form>
+
+                        <!-- Queued Tasks List -->
+                        <div id="taskListContainer" class="space-y-2 max-h-72 overflow-y-auto pr-1">
+                            <!-- Dynamically populated by JS -->
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- RIGHT COLUMN: Intelligent Schedule Timeline & Habit Reflection (7 cols on lg) -->
+                <div class="lg:col-span-7 space-y-6">
+
+                    <!-- Overflow Warning Banner (Hidden unless tasks overflow available hours) -->
+                    <div id="overflowAlertBanner" class="hidden p-4 rounded-2xl bg-rose-500/10 border border-rose-500/30 text-rose-700 dark:text-rose-300 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+                        <div class="flex items-start gap-3">
+                            <div class="w-9 h-9 rounded-xl bg-rose-500/20 text-rose-500 flex items-center justify-center shrink-0 mt-0.5">
+                                <i class="fa-solid fa-triangle-exclamation"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-display font-bold text-sm">Schedule Capacity Overflow Detected!</h3>
+                                <p id="overflowAlertDetails" class="text-xs opacity-90 mt-0.5">Your queued tasks exceed available free windows before sleep.</p>
+                            </div>
+                        </div>
+                        <button onclick="app.trimOverflowTasks()" class="no-print shrink-0 px-3 py-1.5 rounded-xl bg-rose-600 hover:bg-rose-500 text-white text-xs font-semibold transition">
+                            Auto-Defer Low Priority
+                        </button>
+                    </div>
+
+                    <!-- Generated Smart Timetable Card (Printable Area) -->
+                    <div class="print-container bg-white dark:bg-slate-900 rounded-2xl border border-slate-200/80 dark:border-slate-800 p-5 sm:p-6 shadow-sm">
+                        <!-- Timetable Header -->
+                        <div class="flex flex-wrap items-center justify-between gap-3 pb-4 mb-5 border-b border-slate-200/80 dark:border-slate-800">
+                            <div>
+                                <div class="flex items-center gap-2">
+                                    <h2 class="font-display font-bold text-lg text-slate-900 dark:text-white">
+                                        AI Energy-Aware Daily Timetable
+                                    </h2>
+                                    <span class="px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">
+                                        Pomodoro & Meals Embedded
+                                    </span>
+                                </div>
+                                <p id="scheduleSubtitle" class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+                                    Prepared for Aarav Sharma &bull; High-priority tasks locked to Morning Peak
+                                </p>
+                            </div>
+
+                            <!-- Legend / Filter Pills (No-Print) -->
+                            <div class="no-print flex items-center gap-2 text-[11px]">
+                                <span class="inline-flex items-center gap-1 px-2 py-1 rounded-lg bg-amber-500/10 text-amber-600 dark:text-amber-400 font-medium">
+                                    <i class="fa-solid fa-bolt"></i> Peak Slot
+                                </span>
+                                <button onclick="app.printSchedule()" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 font-semibold transition">
+                                    <i class="fa-solid fa-print"></i> Print
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Schedule Timeline Container -->
+                        <div id="scheduleTimeline" class="space-y-3 relative">
+                            <!-- Dynamically populated by JS -->
+                        </div>
+                    </div>
+
+                    <!-- End-of-Day Habit Tracker & Reflection Check-in -->
+                    <div class="no-print bg-white dark:bg-slate-900 rounded-2xl border border-slate-200/80 dark:border-slate-800 p-5 sm:p-6 shadow-sm">
+                        <div class="flex flex-wrap items-center justify-between gap-2 mb-4">
+                            <div class="flex items-center gap-2.5">
+                                <span class="w-8 h-8 rounded-lg bg-violet-500/10 text-violet-500 flex items-center justify-center">
+                                    <i class="fa-solid fa-seedling"></i>
+                                </span>
+                                <div>
+                                    <h2 class="font-display font-bold text-base text-slate-900 dark:text-white">Daily Habit Check-in & Nightly Reflection</h2>
+                                    <p class="text-xs text-slate-500 dark:text-slate-400">Build sustainable compound consistency alongside academic goals</p>
+                                </div>
+                            </div>
+                            <span id="habitPercentageBadge" class="px-3 py-1 rounded-full text-xs font-mono font-bold bg-violet-500/10 text-violet-600 dark:text-violet-400 border border-violet-500/20">
+                                3/5 Completed (60%)
+                            </span>
+                        </div>
+
+                        <!-- Progress Bar -->
+                        <div class="w-full h-2.5 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden mb-4">
+                            <div id="habitProgressBar" class="h-full bg-gradient-to-r from-indigo-500 via-violet-500 to-emerald-400 transition-all duration-500" style="width: 60%"></div>
+                        </div>
+
+                        <!-- Interactive Habits Grid -->
+                        <div id="habitsContainer" class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 mb-5">
+                            <!-- Dynamically populated by JS -->
+                        </div>
+
+                        <!-- Reflection Input Box -->
+                        <div class="p-4 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200/70 dark:border-slate-700/70 space-y-3">
+                            <div class="flex items-center justify-between">
+                                <label for="dailyReflectionInput" class="text-xs font-semibold text-slate-700 dark:text-slate-200 flex items-center gap-1.5">
+                                    <i class="fa-solid fa-pen-fancy text-indigo-500"></i>
+                                    <span>Evening Reflection: Key Win & Tomorrow's #1 Focus</span>
+                                </label>
+                                <span id="reflectionSavedIndicator" class="text-[11px] text-emerald-500 font-medium opacity-0 transition-opacity">Saved ✓</span>
+                            </div>
+                            <textarea id="dailyReflectionInput" rows="2" oninput="app.saveReflection(this.value)" placeholder="What went well during your peak energy hours today? What is your #1 priority tomorrow?" class="w-full px-3 py-2 rounded-xl text-xs sm:text-sm bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"></textarea>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- ==========================================
+             MODULE 2: SMART RESOURCE & OPPORTUNITY FINDER
+             ========================================== -->
+        <section id="tabContent-resources" class="hidden space-y-6">
+
+            <!-- Dynamic Control Banner -->
+            <div class="bg-gradient-to-r from-indigo-900/90 via-slate-900 to-slate-900 rounded-3xl p-6 sm:p-8 text-white border border-indigo-500/30 shadow-xl relative overflow-hidden">
+                <div class="relative z-10 flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+                    <div class="max-w-2xl space-y-2">
+                        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-indigo-500/20 text-indigo-300 border border-indigo-400/30">
+                            <i class="fa-solid fa-sparkles"></i>
+                            <span id="hubBannerModePill">Dynamic Career & Learning Engine</span>
+                        </div>
+                        <h2 id="hubMainHeading" class="font-display font-extrabold text-2xl sm:text-3xl tracking-tight">
+                            Live Internship & Opportunity Board
+                        </h2>
+                        <p id="hubMainSubtext" class="text-sm text-slate-300 leading-relaxed">
+                            Tailored for College & University Students: Explore curated remote/hybrid internships, open-source fellowships, application strategies, and direct career portals.
+                        </p>
+                    </div>
+
+                    <!-- Mode Switcher (School Student vs College/Univ Student) -->
+                    <div class="bg-slate-950/70 p-2 rounded-2xl border border-slate-800 flex flex-col sm:flex-row gap-2 shrink-0">
+                        <button onclick="app.setResourceStudentMode('school')" id="hubModeBtn-school" class="px-4 py-2.5 rounded-xl text-xs sm:text-sm font-semibold transition flex items-center gap-2">
+                            <i class="fa-solid fa-school"></i>
+                            <div class="text-left">
+                                <div>School Student</div>
+                                <div class="text-[10px] opacity-75 font-normal">Playlists, OpenStax & Labs</div>
+                            </div>
+                        </button>
+                        <button onclick="app.setResourceStudentMode('college')" id="hubModeBtn-college" class="px-4 py-2.5 rounded-xl text-xs sm:text-sm font-semibold transition flex items-center gap-2">
+                            <i class="fa-solid fa-user-graduate"></i>
+                            <div class="text-left">
+                                <div>College / University</div>
+                                <div class="text-[10px] opacity-75 font-normal">Internships & Fellowships</div>
+                            </div>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Interest Filter Bar & Search -->
+            <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200/80 dark:border-slate-800 p-4 shadow-sm flex flex-col md:flex-row items-stretch md:items-center justify-between gap-4">
+                <!-- Field of Interest Pills -->
+                <div class="flex items-center gap-2 overflow-x-auto pb-1 md:pb-0" id="interestFilterPills">
+                    <button onclick="app.setInterestFilter('all')" data-interest="all" class="interest-pill px-3.5 py-2 rounded-xl text-xs font-semibold whitespace-nowrap transition">
+                        🌐 All
+                    </button>
+                    <button onclick="app.setInterestFilter('cs_ai')" data-interest="cs_ai" class="interest-pill px-3.5 py-2 rounded-xl text-xs font-semibold whitespace-nowrap transition">
+                        💻 CS & IT
+                    </button>
+                    <button onclick="app.setInterestFilter('ece')" data-interest="ece" class="interest-pill px-3.5 py-2 rounded-xl text-xs font-semibold whitespace-nowrap transition">
+                        📡 ECE
+                    </button>
+                    <button onclick="app.setInterestFilter('eee')" data-interest="eee" class="interest-pill px-3.5 py-2 rounded-xl text-xs font-semibold whitespace-nowrap transition">
+                        ⚡ EEE
+                    </button>
+                    <button onclick="app.setInterestFilter('mech')" data-interest="mech" class="interest-pill px-3.5 py-2 rounded-xl text-xs font-semibold whitespace-nowrap transition">
+                        ⚙️ Mech
+                    </button>
+                    <button onclick="app.setInterestFilter('civil')" data-interest="civil" class="interest-pill px-3.5 py-2 rounded-xl text-xs font-semibold whitespace-nowrap transition">
+                        🏗️ Civil
+                    </button>
+                    <button onclick="app.setInterestFilter('chem')" data-interest="chem" class="interest-pill px-3.5 py-2 rounded-xl text-xs font-semibold whitespace-nowrap transition">
+                        🧪 Chem
+                    </button>
+                    <button onclick="app.setInterestFilter('biotech')" data-interest="biotech" class="interest-pill px-3.5 py-2 rounded-xl text-xs font-semibold whitespace-nowrap transition">
+                        🧬 Biotech
+                    </button>
+                    <button onclick="app.setInterestFilter('aero')" data-interest="aero" class="interest-pill px-3.5 py-2 rounded-xl text-xs font-semibold whitespace-nowrap transition">
+                        🚀 Aero
+                    </button>
+                    <button onclick="app.setInterestFilter('business')" data-interest="business" class="interest-pill px-3.5 py-2 rounded-xl text-xs font-semibold whitespace-nowrap transition">
+                        📈 Biz
+                    </button>
+                </div>
+
+                <!-- Keyword Search Input -->
+                <div class="relative min-w-[240px]">
+                    <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
+                    <input type="text" id="resourceSearchInput" oninput="app.renderResourceHub()" placeholder="Filter by skill, platform, role..." class="w-full pl-9 pr-3 py-2 rounded-xl text-xs sm:text-sm bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                </div>
+            </div>
+
+            <!-- Dynamic Content Container (School Resources OR College Internships) -->
+            <div id="resourceHubDynamicContainer" class="space-y-6">
+                <!-- Populated dynamically by JS -->
+            </div>
+
+        </section>
+
+        <!-- ==========================================
+             MODULE 3: PORTFOLIO & EXPORT SUITE
+             ========================================== -->
+        <section id="tabContent-portfolio" class="hidden space-y-6">
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+
+                <!-- Left Column: Interactive LinkedIn & GitHub Showcase Card Preview (7 cols) -->
+                <div class="lg:col-span-7 space-y-4">
+                    <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200/80 dark:border-slate-800 p-5 sm:p-6 shadow-sm">
+                        <div class="flex flex-wrap items-center justify-between gap-3 mb-5">
+                            <div>
+                                <h2 class="font-display font-bold text-lg text-slate-900 dark:text-white">
+                                    Shareable Student Portfolio & Productivity Card
+                                </h2>
+                                <p class="text-xs text-slate-500 dark:text-slate-400">
+                                    Designed for screenshots on LinkedIn posts or embedding in GitHub READMEs
+                                </p>
+                            </div>
+                            <!-- Card Theme Selector -->
+                            <div class="flex items-center gap-1.5 bg-slate-100 dark:bg-slate-800 p-1 rounded-xl">
+                                <button onclick="app.setPortfolioCardTheme('indigo')" class="px-2.5 py-1 rounded-lg text-xs font-semibold bg-indigo-600 text-white">Indigo</button>
+                                <button onclick="app.setPortfolioCardTheme('emerald')" class="px-2.5 py-1 rounded-lg text-xs font-semibold text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700">Emerald</button>
+                                <button onclick="app.setPortfolioCardTheme('sunset')" class="px-2.5 py-1 rounded-lg text-xs font-semibold text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700">Sunset</button>
+                            </div>
+                        </div>
+
+                        <!-- THE SCREENSHOT-READY PORTFOLIO CARD -->
+                        <div id="portfolioVisualCard" class="rounded-3xl p-6 sm:p-8 bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-900 text-white border border-indigo-500/40 shadow-2xl relative overflow-hidden">
+                            <!-- Decorative Glow -->
+                            <div class="absolute -top-20 -right-20 w-64 h-64 bg-indigo-500/20 rounded-full blur-3xl pointer-events-none"></div>
+                            <div class="absolute -bottom-20 -left-20 w-64 h-64 bg-cyan-500/20 rounded-full blur-3xl pointer-events-none"></div>
+
+                            <div class="relative z-10 space-y-6">
+                                <!-- Top Row: Avatar, Name, Verified Track -->
+                                <div class="flex flex-wrap items-center justify-between gap-4">
+                                    <div class="flex items-center gap-4">
+                                        <div id="cardAvatarInitials" class="w-16 h-16 rounded-2xl bg-gradient-to-br from-indigo-500 to-cyan-400 flex items-center justify-center font-display font-extrabold text-2xl text-white shadow-lg">
+                                            AS
+                                        </div>
+                                        <div>
+                                            <div class="flex items-center gap-2">
+                                                <h3 id="cardStudentName" class="font-display font-extrabold text-xl sm:text-2xl text-white">Aarav Sharma</h3>
+                                                <span class="px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-emerald-400/20 text-emerald-300 border border-emerald-400/30">
+                                                    <i class="fa-solid fa-bolt mr-1"></i>Active Learner
+                                                </span>
+                                            </div>
+                                            <p id="cardStudentSubtitle" class="text-xs sm:text-sm text-indigo-200 mt-0.5">
+                                                College / University Student &bull; Computer Science & AI Track
+                                            </p>
+                                        </div>
+                                    </div>
+
+                                    <div class="text-right font-mono">
+                                        <span class="text-[11px] uppercase tracking-wider text-indigo-300 block">Energy Efficiency</span>
+                                        <span id="cardEfficiencyScore" class="text-2xl sm:text-3xl font-extrabold text-emerald-400">94%</span>
+                                    </div>
+                                </div>
+
+                                <!-- Middle Stats Grid -->
+                                <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                                    <div class="p-3.5 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-md">
+                                        <span class="text-[11px] text-slate-300 block">Peak Chronotype</span>
+                                        <span id="cardChronotype" class="font-display font-bold text-sm sm:text-base text-amber-300 mt-0.5 block">Morning Lark</span>
+                                    </div>
+                                    <div class="p-3.5 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-md">
+                                        <span class="text-[11px] text-slate-300 block">Daily Deep Work</span>
+                                        <span id="cardDeepWork" class="font-display font-bold text-sm sm:text-base text-cyan-300 mt-0.5 block">5.5 Hours</span>
+                                    </div>
+                                    <div class="p-3.5 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-md">
+                                        <span class="text-[11px] text-slate-300 block">Habit Consistency</span>
+                                        <span id="cardHabitScore" class="font-display font-bold text-sm sm:text-base text-emerald-300 mt-0.5 block">60% Today</span>
+                                    </div>
+                                    <div class="p-3.5 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-md">
+                                        <span class="text-[11px] text-slate-300 block">High-Priority Tasks</span>
+                                        <span id="cardHighTasksCount" class="font-display font-bold text-sm sm:text-base text-rose-300 mt-0.5 block">3 Locked</span>
+                                    </div>
+                                </div>
+
+                                <!-- Active Focus Queue Pills -->
+                                <div>
+                                    <span class="text-[11px] font-semibold uppercase tracking-wider text-indigo-300 block mb-2">Today's Peak Energy Priorities</span>
+                                    <div id="cardTopTasksPills" class="flex flex-wrap gap-2">
+                                        <!-- Dynamically populated -->
+                                    </div>
+                                </div>
+
+                                <!-- Footer Branding -->
+                                <div class="pt-4 border-t border-white/10 flex flex-wrap items-center justify-between gap-2 text-[11px] text-slate-300">
+                                    <span class="flex items-center gap-1.5 font-medium">
+                                        <i class="fa-solid fa-bolt-lightning text-indigo-400"></i>
+                                        Generated by Smart Student Career & Learning Hub
+                                    </span>
+                                    <span id="cardCurrentDate" class="font-mono opacity-80">2025 Portfolio Showcase</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Column: GitHub Markdown & LinkedIn Export Actions (5 cols) -->
+                <div class="lg:col-span-5 space-y-6">
+
+                    <!-- GitHub README Badge & Markdown Exporter -->
+                    <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200/80 dark:border-slate-800 p-5 shadow-sm space-y-4">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center gap-2.5">
+                                <span class="w-8 h-8 rounded-lg bg-slate-900 dark:bg-white text-white dark:text-slate-900 flex items-center justify-center">
+                                    <i class="fa-brands fa-github"></i>
+                                </span>
+                                <div>
+                                    <h3 class="font-display font-bold text-base text-slate-900 dark:text-white">GitHub README Markdown</h3>
+                                    <p class="text-xs text-slate-500 dark:text-slate-400">Embed dynamic shields & study metrics</p>
+                                </div>
+                            </div>
+                            <button onclick="app.copyGitHubMarkdown()" class="px-3 py-1.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold flex items-center gap-1.5 transition shadow-sm">
+                                <i class="fa-regular fa-copy"></i>
+                                <span>Copy Markdown</span>
+                            </button>
+                        </div>
+
+                        <pre id="githubMarkdownPreview" class="p-3.5 rounded-xl bg-slate-950 text-slate-200 font-mono text-xs overflow-x-auto leading-relaxed border border-slate-800"></pre>
+                    </div>
+
+                    <!-- LinkedIn Showcase Post Generator -->
+                    <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200/80 dark:border-slate-800 p-5 shadow-sm space-y-4">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center gap-2.5">
+                                <span class="w-8 h-8 rounded-lg bg-sky-500/10 text-sky-500 flex items-center justify-center">
+                                    <i class="fa-brands fa-linkedin-in"></i>
+                                </span>
+                                <div>
+                                    <h3 class="font-display font-bold text-base text-slate-900 dark:text-white">LinkedIn Showcase Post</h3>
+                                    <p class="text-xs text-slate-500 dark:text-slate-400">Ready-to-share project & productivity summary</p>
+                                </div>
+                            </div>
+                            <button onclick="app.copyLinkedInPost()" class="px-3 py-1.5 rounded-xl bg-sky-600 hover:bg-sky-500 text-white text-xs font-semibold flex items-center gap-1.5 transition shadow-sm">
+                                <i class="fa-regular fa-copy"></i>
+                                <span>Copy Post</span>
+                            </button>
+                        </div>
+
+                        <textarea id="linkedinPostPreview" readonly rows="5" class="w-full p-3.5 rounded-xl bg-slate-50 dark:bg-slate-800/90 text-xs text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700 font-sans leading-relaxed focus:outline-none"></textarea>
+
+                        <!-- Print Timetable CTA -->
+                        <div class="pt-2 border-t border-slate-200/80 dark:border-slate-800 flex items-center justify-between">
+                            <span class="text-xs text-slate-500 dark:text-slate-400">Need a clean PDF of today's schedule?</span>
+                            <button onclick="app.printSchedule()" class="px-3.5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold flex items-center gap-1.5 transition">
+                                <i class="fa-solid fa-file-pdf"></i>
+                                <span>Print / Save as PDF</span>
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- ==========================================
+         APPLICATION STRATEGY & TIPS MODAL (FOR INTERNSHIPS)
+         ========================================== -->
+    <div id="strategyModal" class="no-print fixed inset-0 z-50 hidden bg-slate-950/75 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl max-w-lg w-full p-6 shadow-2xl space-y-4 animate-fadeIn">
+            <div class="flex items-start justify-between gap-3">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-indigo-500/10 text-indigo-500 flex items-center justify-center text-lg">
+                        <i class="fa-solid fa-bullseye"></i>
+                    </div>
+                    <div>
+                        <span id="modalRoleOrg" class="text-xs font-semibold text-indigo-500 uppercase tracking-wider">Application Playbook</span>
+                        <h3 id="modalRoleTitle" class="font-display font-bold text-lg text-slate-900 dark:text-white">Software Engineering Intern</h3>
+                    </div>
+                </div>
+                <button onclick="app.closeStrategyModal()" class="w-8 h-8 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-500 hover:text-slate-800 dark:hover:text-white flex items-center justify-center">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <div id="modalStrategyBody" class="space-y-3 text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+                <!-- Populated dynamically -->
+            </div>
+
+            <div class="pt-3 border-t border-slate-200 dark:border-slate-800 flex flex-wrap items-center justify-end gap-2">
+                <button id="modalAddPrepTaskBtn" class="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold flex items-center gap-1.5 transition">
+                    <i class="fa-solid fa-calendar-plus"></i>
+                    <span>Add 60m Prep Task to My Schedule</span>
+                </button>
+                <button onclick="app.closeStrategyModal()" class="px-4 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 text-xs font-semibold">
+                    Close
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==========================================
+         TOAST NOTIFICATION CONTAINER (NO-PRINT)
+         ========================================== -->
+    <div id="toastContainer" class="no-print fixed bottom-5 right-5 z-50 flex flex-col gap-2 max-w-sm w-full pointer-events-none"></div>
+
+    <!-- ==========================================
+         FOOTER (NO-PRINT)
+         ========================================== -->
+    <footer class="no-print border-t border-slate-200/80 dark:border-slate-800/80 py-5 mt-12 bg-white/50 dark:bg-slate-900/50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-slate-500 dark:text-slate-400">
+            <div class="flex items-center gap-2">
+                <i class="fa-solid fa-bolt-lightning text-indigo-500"></i>
+                <span class="font-semibold text-slate-700 dark:text-slate-200">Smart Student Career & Learning Hub</span>
+                <span>&bull; Client-Side AI Portfolio Architecture</span>
+            </div>
+            <div class="flex items-center gap-4">
+                <span>100% LocalStorage Privacy</span>
+                <span>&bull;</span>
+                <span>Zero External API Keys Required</span>
+            </div>
+        </div>
+    </footer>
+
+    <!-- ==========================================
+         MODULAR VANILLA JAVASCRIPT ENGINE
+         ========================================== -->
+    <script>
+        /**
+         * Smart Student Career & Learning Hub
+         * Complete Modular Client-Side Application
+         * Modules:
+         *  1. Circadian Energy Scheduling Engine & Habit Tracker
+         *  2. Dynamic School Resource & College Internship Finder
+         *  3. Portfolio Card & GitHub/LinkedIn Markdown Exporter
+         */
+        const app = (() => {
+            const STORAGE_KEY = 'smart_student_hub_state_v25';
+
+            // Interest Track Metadata
+            const TRACK_LABELS = {
+                cs_ai: 'Computer Science & IT',
+                ece: 'Electronics & Communication',
+                eee: 'Electrical & Electronics',
+                mech: 'Mechanical Engineering',
+                civil: 'Civil Engineering',
+                chem: 'Chemical Engineering',
+                biotech: 'Biotechnology',
+                aero: 'Aerospace Engineering',
+                math_data: 'Mathematics & Data Science',
+                business: 'Business & Finance',
+                literature: 'Literature & Humanities',
+                design: 'Creative Arts & Design'
+            };
+
+            const PEAK_WINDOWS = {
+                morning: { label: 'Morning Lark (07:00 - 12:00)', start: 7 * 60, end: 12 * 60 },
+                afternoon: { label: 'Afternoon Strider (12:00 - 17:00)', start: 12 * 60, end: 17 * 60 },
+                evening: { label: 'Night Owl (17:00 - 22:00)', start: 17 * 60, end: 22 * 60 }
+            };
+
+            // Curated School Student Resources (Free Playlists, Open Textbooks, Practice Labs)
+            const SCHOOL_RESOURCES = [
+                {
+                    id: 'sr-1',
+                    field: 'cs_ai',
+                    type: 'Interactive Course & Playlist',
+                    title: 'CS50x: Introduction to Computer Science (Harvard High School Track)',
+                    provider: 'Harvard OCW / YouTube',
+                    duration: '60m modules',
+                    description: 'Foundational programming in Scratch, C, Python, and AI concepts explained visually for high schoolers.',
+                    tags: ['Python', 'Algorithms', 'AI Foundations'],
+                    url: 'https://cs50.harvard.edu/x/'
+                },
+                {
+                    id: 'sr-2',
+                    field: 'cs_ai',
+                    type: 'Practice Portal',
+                    title: 'Khan Academy: Computing & AP Computer Science Principles',
+                    provider: 'Khan Academy',
+                    duration: '45m practice',
+                    description: 'Interactive exercises covering binary, internet protocols, data analysis, and algorithmic simulations.',
+                    tags: ['AP CSP', 'Logic', 'Interactive'],
+                    url: 'https://www.khanacademy.org/computing'
+                },
+                {
+                    id: 'sr-3',
+                    field: 'math_data',
+                    type: 'YouTube Learning Playlist',
+                    title: '3Blue1Brown: Essence of Calculus & Linear Algebra',
+                    provider: 'Grant Sanderson (YouTube)',
+                    duration: '45m visual study',
+                    description: 'Geometric, intuition-first visual explanations of derivatives, integrals, matrices, and neural networks.',
+                    tags: ['Calculus', 'Visual Math', 'Linear Algebra'],
+                    url: 'https://www.3blue1brown.com/'
+                },
+                {
+                    id: 'sr-4',
+                    field: 'math_data',
+                    type: 'Open-Access Textbook',
+                    title: 'OpenStax: Precalculus, Calculus & Introductory Statistics',
+                    provider: 'Rice University OpenStax',
+                    duration: '60m reading',
+                    description: 'Peer-reviewed, 100% free downloadable PDF and web textbooks with worked examples and problem sets.',
+                    tags: ['OpenStax', 'Statistics', 'Problem Sets'],
+                    url: 'https://openstax.org/subjects/math'
+                },
+                {
+                    id: 'sr-5',
+                    field: 'literature',
+                    type: 'YouTube Learning Playlist',
+                    title: 'CrashCourse Literature & World History Collection',
+                    provider: 'CrashCourse (John Green)',
+                    duration: '30m review',
+                    description: 'High-energy critical analysis of classic novels, poetry, rhetoric, and historical context for school essays.',
+                    tags: ['Critical Reading', 'Essay Writing', 'History'],
+                    url: 'https://thecrashcourse.com/'
+                },
+                {
+                    id: 'sr-6',
+                    field: 'literature',
+                    type: 'Open-Access Library',
+                    title: 'MIT OpenCourseWare: Highlights for High School Humanities',
+                    provider: 'MIT OCW',
+                    duration: '45m reading',
+                    description: 'Curated writing guides, philosophy modules, and primary source analysis tailored for secondary students.',
+                    tags: ['Philosophy', 'Rhetoric', 'MIT OCW'],
+                    url: 'https://ocw.mit.edu/'
+                },
+                {
+                    id: 'sr-7',
+                    field: 'business',
+                    type: 'Interactive Portal',
+                    title: 'Wharton Global Youth Program: Finance & Entrepreneurship Essentials',
+                    provider: 'Wharton School UPenn',
+                    duration: '45m case study',
+                    description: 'Free articles, video glossary, and investment competition resources designed for high school innovators.',
+                    tags: ['Financial Literacy', 'Startups', 'Economics'],
+                    url: 'https://globalyouth.wharton.upenn.edu/'
+                },
+                {
+                    id: 'sr-8',
+                    field: 'business',
+                    type: 'Open-Access Textbook',
+                    title: 'OpenStax Principles of Macroeconomics & Microeconomics',
+                    provider: 'OpenStax',
+                    duration: '60m study',
+                    description: 'Comprehensive, student-friendly textbook covering supply & demand, fiscal policy, and global markets.',
+                    tags: ['Economics', 'Markets', 'Open Textbook'],
+                    url: 'https://openstax.org/subjects/business'
+                },
+                {
+                    id: 'sr-9',
+                    field: 'design',
+                    type: 'Interactive Practice Lab',
+                    title: 'Figma for Education: Student UI/UX & Prototyping Starter Kit',
+                    provider: 'Figma Education',
+                    duration: '60m hands-on',
+                    description: 'Free professional design tools and interactive wireframing templates for verified school and college students.',
+                    tags: ['UI/UX', 'Wireframing', 'Visual Design'],
+                    url: 'https://www.figma.com/education/'
+                },
+                {
+                    id: 'sr-10',
+                    field: 'design',
+                    type: 'Open Museum & Course',
+                    title: 'MoMA & Khan Academy: Art History & Visual Storytelling',
+                    provider: 'Smarthistory / MoMA',
+                    duration: '45m exploration',
+                    description: 'Explore modern design movements, color theory, typography, and digital media composition.',
+                    tags: ['Color Theory', 'Art History', 'Composition'],
+                    url: 'https://smarthistory.org/'
+                },
+                {
+                    id: 'sr-11',
+                    field: 'ece',
+                    type: 'Interactive Video Course',
+                    title: 'NPTEL: Basic Electronics & Communication Foundation',
+                    provider: 'NPTEL / IITs',
+                    duration: '60m lectures',
+                    description: 'Free comprehensive modules on semiconductor physics, digital circuits, and communication theory.',
+                    tags: ['Electronics', 'Circuits', 'NPTEL'],
+                    url: 'https://nptel.ac.in/courses/117/103/117103063/'
+                },
+                {
+                    id: 'sr-12',
+                    field: 'eee',
+                    type: 'Interactive Practice Lab',
+                    title: 'PhET Interactive Circuit Simulations',
+                    provider: 'University of Colorado Boulder',
+                    duration: '45m lab',
+                    description: 'Hands-on virtual lab to build, test, and understand AC/DC circuits, voltage, and current mechanics.',
+                    tags: ['Electrical', 'Virtual Lab', 'Circuits'],
+                    url: 'https://phet.colorado.edu/en/simulations/circuit-construction-kit-dc'
+                },
+                {
+                    id: 'sr-13',
+                    field: 'mech',
+                    type: 'Open-Access Course',
+                    title: 'MIT OCW: Introduction to Solid Mechanics',
+                    provider: 'MIT OpenCourseWare',
+                    duration: '60m reading',
+                    description: 'Fundamental principles of mechanics, kinematics, and material stress/strain analysis.',
+                    tags: ['Mechanics', 'Thermodynamics', 'MIT OCW'],
+                    url: 'https://ocw.mit.edu/courses/mechanical-engineering/'
+                },
+                {
+                    id: 'sr-14',
+                    field: 'civil',
+                    type: 'YouTube Learning Playlist',
+                    title: 'Engineering Mechanics & Structural Analysis',
+                    provider: 'NPTEL HRD (YouTube)',
+                    duration: '45m video',
+                    description: 'Visual breakdowns of structural engineering, statics, and civil construction basics.',
+                    tags: ['Civil', 'Structures', 'NPTEL'],
+                    url: 'https://nptel.ac.in/courses/105'
+                },
+                {
+                    id: 'sr-15',
+                    field: 'chem',
+                    type: 'Interactive Course',
+                    title: 'Coursera: Chemical Reaction Engineering Fundamentals',
+                    provider: 'Coursera / University Partners',
+                    duration: '60m modules',
+                    description: 'Introduction to reaction kinetics, thermodynamics, and mass transfer for beginners.',
+                    tags: ['Chemical', 'Kinetics', 'Mass Transfer'],
+                    url: 'https://www.coursera.org/courses?query=chemical%20engineering'
+                },
+                {
+                    id: 'sr-16',
+                    field: 'biotech',
+                    type: 'Open-Access Textbook',
+                    title: 'NCERT & Khan Academy: Biology & Genetic Engineering',
+                    provider: 'Khan Academy / NCERT',
+                    duration: '45m practice',
+                    description: 'Foundational concepts in genetics, cell biology, and modern biotechnology techniques.',
+                    tags: ['Biotech', 'Genetics', 'Biology'],
+                    url: 'https://www.khanacademy.org/science/biology'
+                },
+                {
+                    id: 'sr-17',
+                    field: 'aero',
+                    type: 'YouTube Learning Playlist',
+                    title: 'NASA STEM & Aerodynamics for Students',
+                    provider: 'NASA STEM',
+                    duration: '45m exploration',
+                    description: 'Learn the principles of flight, rocket propulsion, and fluid dynamics directly from space agency educators.',
+                    tags: ['Aerospace', 'NASA', 'Propulsion'],
+                    url: 'https://www.nasa.gov/learning-resources/'
+                }
+            ];
+
+            // Curated College / University Internships & Fellowships Board
+            const COLLEGE_INTERNSHIPS = [
+                {
+                    id: 'ci-1',
+                    field: 'cs_ai',
+                    role: 'Open Source Software & AI Fellow',
+                    org: 'Google Summer of Code (GSoC) / Open Source Orgs',
+                    mode: 'Remote Global',
+                    stipend: '$1,500 - $3,000 Stipend',
+                    duration: '12 Weeks',
+                    tags: ['Python', 'Git', 'Machine Learning', 'Open Source'],
+                    portalUrl: 'https://summerofcode.withgoogle.com/',
+                    strategy: {
+                        resumeTip: 'Highlight merged Pull Requests, GitHub repository links, and clean unit test coverage in your top 2 project bullets.',
+                        interviewTip: 'Start contributing to the organization issue tracker 3-4 weeks before submitting your proposal RFC.',
+                        prepTaskTitle: 'Draft GSoC Proposal & Fix 1 Good-First-Issue'
+                    }
+                },
+                {
+                    id: 'ci-2',
+                    field: 'cs_ai',
+                    role: 'Software Engineering Virtual Experience Intern',
+                    org: 'JPMorgan Chase & Co. (via Forage)',
+                    mode: 'Self-Paced Virtual',
+                    stipend: 'Verified Certificate',
+                    duration: '6-8 Hours',
+                    tags: ['React', 'Python', 'Financial Tech', 'Git'],
+                    portalUrl: 'https://www.theforage.com/',
+                    strategy: {
+                        resumeTip: 'List the specific interface perspective dashboard you built using React and Perspective open-source library.',
+                        interviewTip: 'Be ready to explain how real-time data feeds are visualized for traders without UI lag.',
+                        prepTaskTitle: 'Complete Forage SWE Module 1 & Push to GitHub'
+                    }
+                },
+                {
+                    id: 'ci-3',
+                    field: 'math_data',
+                    role: 'Data Science & Quantitative Research Intern',
+                    org: 'Kaggle Competitions / WorldQuant Brain Fellowship',
+                    mode: 'Remote / Hybrid',
+                    stipend: 'Performance Stipend',
+                    duration: '10 Weeks',
+                    tags: ['SQL', 'Pandas', 'Statistical Modeling', 'Time Series'],
+                    portalUrl: 'https://www.kaggle.com/',
+                    strategy: {
+                        resumeTip: 'Quantify model improvements (e.g., "Reduced RMSE by 14% using XGBoost feature engineering on 250k rows").',
+                        interviewTip: 'Review bias-variance tradeoff, p-values, A/B test power calculation, and SQL window functions.',
+                        prepTaskTitle: 'Practice SQL Window Functions & EDA Notebook'
+                    }
+                },
+                {
+                    id: 'ci-4',
+                    field: 'business',
+                    role: 'Product Management & Strategy Intern',
+                    org: 'Y Combinator Startup Ecosystem (Work at a Startup)',
+                    mode: 'Remote / Hybrid',
+                    stipend: '$1,000 - $2,500/mo',
+                    duration: '8-12 Weeks',
+                    tags: ['Product Specs', 'User Research', 'SQL', 'Growth'],
+                    portalUrl: 'https://www.workatastartup.com/',
+                    strategy: {
+                        resumeTip: 'Include a 1-page Product Teardown or PRD link showing how you solved a real user onboarding bottleneck.',
+                        interviewTip: 'Founders love speed and clarity—bring 3 concrete product improvement ideas to your first screening call.',
+                        prepTaskTitle: 'Write 1-Page Product Teardown for Target Startup'
+                    }
+                },
+                {
+                    id: 'ci-5',
+                    field: 'literature',
+                    role: 'Editorial, Policy Research & Communications Intern',
+                    org: 'Brookings / UNESCO Youth & Digital Publishing Labs',
+                    mode: 'Remote / Hybrid',
+                    stipend: 'Fellowship Grant',
+                    duration: '10 Weeks',
+                    tags: ['Policy Briefs', 'Research Synthesis', 'Copywriting', 'Media'],
+                    portalUrl: 'https://www.linkedin.com/jobs/',
+                    strategy: {
+                        resumeTip: 'Curate a clean digital writing portfolio (Substack, Medium, or Notion) with 3 published analytical essays.',
+                        interviewTip: 'Demonstrate how you synthesize 40-page academic reports into crisp 500-word executive briefings.',
+                        prepTaskTitle: 'Polish 3 Writing Samples in Portfolio Link'
+                    }
+                },
+                {
+                    id: 'ci-6',
+                    field: 'design',
+                    role: 'Product Design (UI/UX) & Design Systems Intern',
+                    org: 'Figma Community Creators / Tech Design Fellows',
+                    mode: 'Remote',
+                    stipend: '$1,200 - $2,400/mo',
+                    duration: '12 Weeks',
+                    tags: ['Figma', 'Design Systems', 'Prototyping', 'Accessibility'],
+                    portalUrl: 'https://www.linkedin.com/jobs/',
+                    strategy: {
+                        resumeTip: 'Show before-and-after user flows, edge-case states, and WCAG accessibility contrast checks in your case studies.',
+                        interviewTip: 'Walk through 2 case studies in 10 minutes focusing on constraints and iteration rather than just final pixels.',
+                        prepTaskTitle: 'Refine Case Study #1 Interactive Figma Prototype'
+                    }
+                },
+                {
+                    id: 'ci-7',
+                    field: 'mech',
+                    role: 'Mechanical Design & R&D Intern',
+                    org: 'Tata Motors / Mahindra Rise',
+                    mode: 'On-Site / Hybrid',
+                    stipend: '₹15,000 - ₹25,000/mo',
+                    duration: '8-12 Weeks',
+                    tags: ['AutoCAD', 'SolidWorks', 'Thermodynamics', 'R&D'],
+                    portalUrl: 'https://www.tatamotors.com/careers/',
+                    strategy: {
+                        resumeTip: 'Include a portfolio link to CAD models (e.g., GrabCAD) and note any Baja SAE or Formula Student experience.',
+                        interviewTip: 'Review fundamental stress-strain curves, manufacturing processes, and geometric dimensioning & tolerancing (GD&T).',
+                        prepTaskTitle: 'Update CAD Portfolio & Review GD&T Basics'
+                    }
+                },
+                {
+                    id: 'ci-8',
+                    field: 'civil',
+                    role: 'Structural Engineering & Project Trainee',
+                    org: 'L&T Construction (Build India Scholarship)',
+                    mode: 'On-Site',
+                    stipend: 'Sponsored M.Tech + Stipend',
+                    duration: '24 Months',
+                    tags: ['AutoCAD Civil', 'STAAD Pro', 'Site Management'],
+                    portalUrl: 'https://www.lntecc.com/build-india-scholarship/',
+                    strategy: {
+                        resumeTip: 'Highlight coursework in structural analysis, surveying, and any proficiency in STAAD Pro or Revit.',
+                        interviewTip: 'Be prepared to discuss concrete mix designs, load path calculations, and on-site safety protocols.',
+                        prepTaskTitle: 'Practice STAAD Pro Frame Analysis Module'
+                    }
+                },
+                {
+                    id: 'ci-9',
+                    field: 'ece',
+                    role: 'VLSI Design & Hardware Engineering Intern',
+                    org: 'Intel / Texas Instruments',
+                    mode: 'Hybrid',
+                    stipend: 'Competitive Corporate Rate',
+                    duration: '6 Months',
+                    tags: ['Verilog', 'VLSI', 'Digital Logic', 'Embedded Systems'],
+                    portalUrl: 'https://jobs.intel.com/',
+                    strategy: {
+                        resumeTip: 'List specific FPGA boards used (e.g., Xilinx, Altera) and mention complex projects like a pipelined CPU design.',
+                        interviewTip: 'Expect in-depth questions on setup/hold time, finite state machines (FSM), and CMOS logic basics.',
+                        prepTaskTitle: 'Review Setup/Hold Time & FSM Logic'
+                    }
+                },
+                {
+                    id: 'ci-10',
+                    field: 'eee',
+                    role: 'Power Electronics & Control Systems Intern',
+                    org: 'Siemens / General Electric (GE Careers)',
+                    mode: 'Hybrid / On-Site',
+                    stipend: 'Competitive Corporate Rate',
+                    duration: '10-12 Weeks',
+                    tags: ['MATLAB/Simulink', 'Power Grids', 'Automation'],
+                    portalUrl: 'https://jobs.siemens.com/careers',
+                    strategy: {
+                        resumeTip: 'Detail any projects involving MATLAB/Simulink for motor control or renewable energy grid integration.',
+                        interviewTip: 'Brush up on PID controllers, transformer efficiencies, and three-phase power basics.',
+                        prepTaskTitle: 'Build a Motor Control Model in Simulink'
+                    }
+                },
+                {
+                    id: 'ci-11',
+                    field: 'biotech',
+                    role: 'Bioprocess & R&D Summer Intern',
+                    org: 'Biocon / Serum Institute of India',
+                    mode: 'On-Site Lab',
+                    stipend: '₹12,000 - ₹20,000/mo',
+                    duration: '8-10 Weeks',
+                    tags: ['Cell Culture', 'Downstream Processing', 'Genetics'],
+                    portalUrl: 'https://www.biocon.com/careers/',
+                    strategy: {
+                        resumeTip: 'Highlight wet-lab skills, chromatography experience, and any bio-informatics tools (e.g., BLAST, PyMOL).',
+                        interviewTip: 'Be ready to explain specific lab protocols, sterile techniques, and basic biostatistics.',
+                        prepTaskTitle: 'Review Wet-Lab Protocols & Chromatography'
+                    }
+                },
+                {
+                    id: 'ci-12',
+                    field: 'chem',
+                    role: 'Process Engineering Intern',
+                    org: 'Reliance Industries / BASF',
+                    mode: 'On-Site',
+                    stipend: '₹15,000 - ₹25,000/mo',
+                    duration: '8 Weeks',
+                    tags: ['Fluid Mechanics', 'Aspen Plus', 'Heat Transfer'],
+                    portalUrl: 'https://careers.ril.com/',
+                    strategy: {
+                        resumeTip: 'Showcase process simulation experience using Aspen Plus, HYSYS, or COMSOL.',
+                        interviewTip: 'Prepare to discuss mass and heat balance equations, distillation columns, and safety (HAZOP).',
+                        prepTaskTitle: 'Review Mass Balance & Distillation Theory'
+                    }
+                },
+                {
+                    id: 'ci-13',
+                    field: 'aero',
+                    role: 'Aerodynamics & Propulsion Research Trainee',
+                    org: 'ISRO (VSSC) / Boeing',
+                    mode: 'On-Site',
+                    stipend: 'Govt. Mandated Stipend',
+                    duration: '4-6 Months',
+                    tags: ['CFD', 'Ansys', 'Aerodynamics', 'MATLAB'],
+                    portalUrl: 'https://www.isro.gov.in/Careers.html',
+                    strategy: {
+                        resumeTip: 'Emphasize Computational Fluid Dynamics (CFD) projects, Ansys fluency, and any wind-tunnel testing experience.',
+                        interviewTip: 'Brush up on Navier-Stokes equations, Mach numbers, and boundary layer theory.',
+                        prepTaskTitle: 'Run a Basic CFD Simulation in Ansys'
+                    }
+                }
+            ];
+
+            // Default Demo State
+            const getDefaultState = () => ({
+                activeTab: 'planner',
+                theme: 'dark',
+                portfolioTheme: 'indigo',
+                interestFilter: 'all',
+                profile: {
+                    name: 'Aarav Sharma',
+                    studentType: 'college', // 'school' | 'college'
+                    interest: 'cs_ai',
+                    wakeTime: '06:30',
+                    sleepTime: '22:30',
+                    hasFixedBlock: true,
+                    fixedStart: '09:30',
+                    fixedEnd: '14:30',
+                    peakEnergy: 'morning' // 'morning' | 'afternoon' | 'evening'
+                },
+                tasks: [
+                    { id: 't-1', title: 'Algorithm Design: Dynamic Programming & Graphs', duration: 90, priority: 'High', category: 'Study', completed: true },
+                    { id: 't-2', title: 'Build Smart Student Hub Portfolio Feature in JS', duration: 60, priority: 'High', category: 'Skills', completed: false },
+                    { id: 't-3', title: 'Review Linear Algebra Notes & Problem Set 4', duration: 45, priority: 'Medium', category: 'Study', completed: false },
+                    { id: 't-4', title: 'Evening Mobility, Run & Hydration Reset', duration: 30, priority: 'Medium', category: 'Wellness', completed: true },
+                    { id: 't-5', title: 'Organize Study Desk & Update GitHub README', duration: 30, priority: 'Low', category: 'Chores', completed: false }
+                ],
+                habits: [
+                    { id: 'h-1', label: '90m+ Phone-Free Deep Focus Block', done: true },
+                    { id: 'h-2', label: 'Active Recall / Spaced Repetition Review', done: true },
+                    { id: 'h-3', label: 'Hydration Target (2.5L Water)', done: true },
+                    { id: 'h-4', label: '30m Physical Movement / Outdoor Walk', done: false },
+                    { id: 'h-5', label: 'No Screens 30m Before Sleep Target', done: false }
+                ],
+                reflection: 'Completed my toughest Dynamic Programming module during my 07:00 AM morning energy peak before lectures! Tomorrow I will finalize my GitHub portfolio deployment.'
+            });
+
+            let state = getDefaultState();
+            let lastComputedMetrics = {
+                efficiencyScore: 94,
+                totalFocusMins: 255,
+                totalFreeMins: 480,
+                overflowMins: 0
+            };
+
+            // ==========================================
+            // STORAGE & INITIALIZATION
+            // ==========================================
+            function loadState() {
+                try {
+                    const saved = localStorage.getItem(STORAGE_KEY);
+                    if (saved) {
+                        const parsed = JSON.parse(saved);
+                        state = {
+                            ...getDefaultState(),
+                            ...parsed,
+                            profile: { ...getDefaultState().profile, ...(parsed.profile || {}) }
+                        };
+                    }
+                } catch (err) {
+                    console.warn('LocalStorage fallback used:', err);
+                }
+            }
+
+            function saveState() {
+                try {
+                    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+                } catch (err) {
+                    console.warn('Unable to save state:', err);
+                }
+            }
+
+            // ==========================================
+            // TIME FORMATTING HELPERS
+            // ==========================================
+            function timeToMins(timeStr) {
+                if (!timeStr || !timeStr.includes(':')) return 420;
+                const [h, m] = timeStr.split(':').map(Number);
+                return h * 60 + m;
+            }
+
+            function minsToTime(totalMins) {
+                const normalized = ((totalMins % 1440) + 1440) % 1440;
+                const h = Math.floor(normalized / 60);
+                const m = normalized % 60;
+                const period = h >= 12 ? 'PM' : 'AM';
+                const h12 = h % 12 === 0 ? 12 : h % 12;
+                return `${String(h12).padStart(2, '0')}:${String(m).padStart(2, '0')} ${period}`;
+            }
+
+            // ==========================================
+            // MODULE 1: INTELLIGENT CIRCADIAN SCHEDULING ENGINE
+            // ==========================================
+            function generateSmartSchedule() {
+                const p = state.profile;
+                let wakeMins = timeToMins(p.wakeTime);
+                let sleepMins = timeToMins(p.sleepTime);
+                if (sleepMins <= wakeMins) {
+                    sleepMins = wakeMins + 15 * 60; // Safeguard if overnight time entered
+                }
+
+                // 1. Build Fixed Anchors (Meals, Fixed Classes, Nightly Reflection)
+                const fixedBlocks = [];
+
+                // Anchor A: Morning Routine & Breakfast (30 mins right after wake-up)
+                fixedBlocks.push({
+                    start: wakeMins,
+                    end: wakeMins + 30,
+                    title: 'Morning Hydration, Routine & Healthy Breakfast',
+                    type: 'meal',
+                    icon: 'fa-mug-saucer',
+                    badge: 'Bio-Anchor'
+                });
+
+                // Anchor B: Fixed Commitment (School / College Hours) if enabled
+                if (p.hasFixedBlock) {
+                    const fStart = Math.max(wakeMins + 30, timeToMins(p.fixedStart));
+                    const fEnd = Math.min(sleepMins - 30, timeToMins(p.fixedEnd));
+                    if (fEnd > fStart) {
+                        fixedBlocks.push({
+                            start: fStart,
+                            end: fEnd,
+                            title: p.studentType === 'school'
+                                ? 'School Classes & Academic Labs'
+                                : 'University Lectures, Labs & Campus Block',
+                            type: 'fixed',
+                            icon: 'fa-building-columns',
+                            badge: 'Fixed Commitment'
+                        });
+                    }
+                }
+
+                // Anchor C: Midday Lunch & Recharge (40 mins around 13:00, or right after fixed block)
+                let lunchStart = 13 * 60;
+                if (p.hasFixedBlock) {
+                    const fStart = timeToMins(p.fixedStart);
+                    const fEnd = timeToMins(p.fixedEnd);
+                    if (lunchStart >= fStart && lunchStart < fEnd) {
+                        lunchStart = fEnd; // Place lunch immediately after classes end
+                    }
+                }
+                if (lunchStart >= wakeMins + 60 && lunchStart + 40 <= sleepMins - 60) {
+                    fixedBlocks.push({
+                        start: lunchStart,
+                        end: lunchStart + 40,
+                        title: 'Nutritious Lunch & Screen-Free Recharge',
+                        type: 'meal',
+                        icon: 'fa-utensils',
+                        badge: 'Meal & Rest'
+                    });
+                }
+
+                // Anchor D: Dinner & Unwind (40 mins at 19:30 if within awake window)
+                const dinnerStart = 19 * 60 + 30;
+                if (dinnerStart >= wakeMins + 120 && dinnerStart + 40 <= sleepMins - 30) {
+                    fixedBlocks.push({
+                        start: dinnerStart,
+                        end: dinnerStart + 40,
+                        title: 'Dinner & Mindful Family/Social Recharge',
+                        type: 'meal',
+                        icon: 'fa-bowl-rice',
+                        badge: 'Meal & Rest'
+                    });
+                }
+
+                // Anchor E: Nightly Reflection & Habit Check-in (20 mins before sleep)
+                if (sleepMins - 20 > wakeMins + 60) {
+                    fixedBlocks.push({
+                        start: sleepMins - 20,
+                        end: sleepMins,
+                        title: 'Daily Habit Check-in, Reflection & Digital Sunset',
+                        type: 'reflection',
+                        icon: 'fa-moon',
+                        badge: 'Wind-Down'
+                    });
+                }
+
+                // Sort and merge overlapping fixed blocks
+                fixedBlocks.sort((a, b) => a.start - b.start);
+                const mergedAnchors = [];
+                for (const block of fixedBlocks) {
+                    if (!mergedAnchors.length || block.start >= mergedAnchors[mergedAnchors.length - 1].end) {
+                        mergedAnchors.push({ ...block });
+                    } else {
+                        // Shift meal slightly if colliding
+                        const prev = mergedAnchors[mergedAnchors.length - 1];
+                        const duration = block.end - block.start;
+                        if (prev.end + duration <= sleepMins) {
+                            mergedAnchors.push({
+                                ...block,
+                                start: prev.end,
+                                end: prev.end + duration
+                            });
+                        }
+                    }
+                }
+
+                // 2. Compute Free Time Windows between wakeMins and sleepMins
+                const freeWindows = [];
+                let cursor = wakeMins;
+                for (const anchor of mergedAnchors) {
+                    if (anchor.start > cursor) {
+                        freeWindows.push({ start: cursor, end: anchor.start });
+                    }
+                    cursor = Math.max(cursor, anchor.end);
+                }
+                if (cursor < sleepMins) {
+                    freeWindows.push({ start: cursor, end: sleepMins });
+                }
+
+                const totalFreeMins = freeWindows.reduce((acc, w) => acc + (w.end - w.start), 0);
+
+                // 3. Score Free Windows by overlap with selected Peak Energy Window
+                const peakRange = PEAK_WINDOWS[p.peakEnergy] || PEAK_WINDOWS.morning;
+
+                // Split free windows at peak boundaries so peak sub-windows can be prioritized accurately
+                const segmentedWindows = [];
+                freeWindows.forEach(w => {
+                    const points = new Set([w.start, w.end]);
+                    if (peakRange.start > w.start && peakRange.start < w.end) points.add(peakRange.start);
+                    if (peakRange.end > w.start && peakRange.end < w.end) points.add(peakRange.end);
+                    const sortedPts = Array.from(points).sort((a, b) => a - b);
+                    for (let i = 0; i < sortedPts.length - 1; i++) {
+                        const s = sortedPts[i];
+                        const e = sortedPts[i + 1];
+                        const mid = (s + e) / 2;
+                        const isPeak = mid >= peakRange.start && mid <= peakRange.end;
+                        segmentedWindows.push({
+                            start: s,
+                            end: e,
+                            cursor: s,
+                            isPeak
+                        });
+                    }
+                });
+
+                // 4. Sort Tasks by Cognitive Weight (High Priority + Study/Skills first)
+                const priorityWeight = { High: 30, Medium: 20, Low: 10 };
+                const categoryWeight = { Study: 8, Skills: 7, Wellness: 4, Chores: 2 };
+                const sortedTasks = [...state.tasks].sort((a, b) => {
+                    const scoreA = (priorityWeight[a.priority] || 10) + (categoryWeight[a.category] || 2);
+                    const scoreB = (priorityWeight[b.priority] || 10) + (categoryWeight[b.category] || 2);
+                    return scoreB - scoreA;
+                });
+
+                const scheduledBlocks = [...mergedAnchors];
+                const overflowTasks = [];
+                let peakMatchedHighTasks = 0;
+                let totalHighTasks = 0;
+
+                // Helper to allocate a task into available windows (preferring Peak windows for High/Study/Skills)
+                sortedTasks.forEach(task => {
+                    const prefersPeak = task.priority === 'High' || task.category === 'Study' || task.category === 'Skills';
+                    if (task.priority === 'High') totalHighTasks++;
+
+                    // Order candidate windows: if prefersPeak, try isPeak windows first in chronological order, then non-peak
+                    const candidateWindows = [...segmentedWindows].sort((a, b) => {
+                        if (prefersPeak && a.isPeak !== b.isPeak) {
+                            return a.isPeak ? -1 : 1;
+                        }
+                        return a.start - b.start;
+                    });
+
+                    // Find a window that can fit the task duration
+                    let placed = false;
+                    for (const win of candidateWindows) {
+                        const avail = win.end - win.cursor;
+                        if (avail >= task.duration) {
+                            const taskStart = win.cursor;
+                            const taskEnd = taskStart + task.duration;
+                            scheduledBlocks.push({
+                                start: taskStart,
+                                end: taskEnd,
+                                title: task.title,
+                                type: 'task',
+                                taskId: task.id,
+                                priority: task.priority,
+                                category: task.category,
+                                completed: task.completed,
+                                isPeakSlot: win.isPeak,
+                                duration: task.duration
+                            });
+
+                            if (task.priority === 'High' && win.isPeak) {
+                                peakMatchedHighTasks++;
+                            }
+
+                            win.cursor = taskEnd;
+
+                            // Inject a 15-min Pomodoro Brain Reset Break if task >= 60m and at least 25m remains in window
+                            if (task.duration >= 60 && (win.end - win.cursor) >= 25) {
+                                scheduledBlocks.push({
+                                    start: win.cursor,
+                                    end: win.cursor + 15,
+                                    title: '15m Pomodoro Brain Reset & Eye Stretch',
+                                    type: 'break',
+                                    icon: 'fa-spa',
+                                    badge: 'Brain Reset'
+                                });
+                                win.cursor += 15;
+                            }
+
+                            placed = true;
+                            break;
+                        }
+                    }
+
+                    // If no single window fits the full task, try chunking across remaining windows or mark overflow
+                    if (!placed) {
+                        overflowTasks.push(task);
+                    }
+                });
+
+                // Fill remaining substantial free windows (>= 30 mins) as Open Autonomous Buffer blocks
+                segmentedWindows.forEach(win => {
+                    const rem = win.end - win.cursor;
+                    if (rem >= 30) {
+                        scheduledBlocks.push({
+                            start: win.cursor,
+                            end: win.end,
+                            title: win.isPeak
+                                ? 'Open Peak Focus Buffer / Self-Paced Exploration'
+                                : 'Flexible Buffer / Light Reading & Rest',
+                            type: 'buffer',
+                            isPeakSlot: win.isPeak,
+                            duration: rem
+                        });
+                    }
+                });
+
+                scheduledBlocks.sort((a, b) => a.start - b.start);
+
+                // Calculate KPI metrics
+                const totalFocusMins = state.tasks.reduce((acc, t) => acc + Number(t.duration), 0);
+                const overflowMins = overflowTasks.reduce((acc, t) => acc + Number(t.duration), 0);
+                let efficiencyScore = 92;
+                if (totalHighTasks > 0) {
+                    efficiencyScore = Math.round(78 + (peakMatchedHighTasks / totalHighTasks) * 20);
+                }
+                if (overflowMins > 0) {
+                    efficiencyScore = Math.max(55, efficiencyScore - 18);
+                }
+
+                lastComputedMetrics = {
+                    efficiencyScore,
+                    totalFocusMins,
+                    totalFreeMins,
+                    overflowMins
+                };
+
+                return {
+                    scheduledBlocks,
+                    overflowTasks,
+                    metrics: lastComputedMetrics
+                };
+            }
+
+            // ==========================================
+            // UI RENDERING: MODULE 1 (PLANNER & HABITS)
+            // ==========================================
+            function renderPlannerModule() {
+                const p = state.profile;
+
+                // Sync Profile Inputs
+                document.getElementById('profileName').value = p.name;
+                document.getElementById('profileType').value = p.studentType;
+                document.getElementById('profileInterest').value = p.interest;
+                document.getElementById('wakeTime').value = p.wakeTime;
+                document.getElementById('sleepTime').value = p.sleepTime;
+                document.getElementById('hasFixedBlock').checked = p.hasFixedBlock;
+                document.getElementById('fixedStart').value = p.fixedStart;
+                document.getElementById('fixedEnd').value = p.fixedEnd;
+                document.getElementById('fixedBlockInputs').classList.toggle('opacity-40', !p.hasFixedBlock);
+                document.getElementById('fixedBlockInputs').classList.toggle('pointer-events-none', !p.hasFixedBlock);
+
+                // Header Mode Indicator
+                const isSchool = p.studentType === 'school';
+                document.getElementById('headerModeIcon').className = isSchool
+                    ? 'fa-solid fa-school text-amber-500'
+                    : 'fa-solid fa-user-graduate text-indigo-500';
+                document.getElementById('headerModeText').textContent = isSchool
+                    ? 'School Student'
+                    : 'College / Univ';
+                document.getElementById('resourceTabBadge').textContent = isSchool
+                    ? 'Free Resources'
+                    : 'Internships';
+
+                // Peak Energy Buttons
+                ['morning', 'afternoon', 'evening'].forEach(key => {
+                    const btn = document.getElementById(`peakBtn-${key}`);
+                    const active = p.peakEnergy === key;
+                    btn.className = active
+                        ? 'peak-btn p-2.5 rounded-xl border-2 border-indigo-500 bg-indigo-500/10 text-indigo-600 dark:text-indigo-300 text-center transition flex flex-col items-center gap-1 shadow-sm'
+                        : 'peak-btn p-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/60 text-slate-600 dark:text-slate-400 hover:border-indigo-400 text-center transition flex flex-col items-center gap-1';
+                });
+
+                // Render Task Queue List
+                const taskContainer = document.getElementById('taskListContainer');
+                if (state.tasks.length === 0) {
+                    taskContainer.innerHTML = `
+                        <div class="p-6 text-center rounded-xl border border-dashed border-slate-200 dark:border-slate-800 text-slate-400 text-xs">
+                            <i class="fa-solid fa-clipboard-list text-lg mb-1.5 block"></i>
+                            No tasks in queue. Add a task above or click <strong>+ Preset</strong>!
+                        </div>
+                    `;
+                } else {
+                    const priorityBadgeMap = {
+                        High: 'bg-rose-500/10 text-rose-600 dark:text-rose-400 border-rose-500/20',
+                        Medium: 'bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/20',
+                        Low: 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20'
+                    };
+                    const categoryBadgeMap = {
+                        Study: 'bg-indigo-500/10 text-indigo-600 dark:text-indigo-400',
+                        Skills: 'bg-cyan-500/10 text-cyan-600 dark:text-cyan-400',
+                        Wellness: 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400',
+                        Chores: 'bg-slate-500/10 text-slate-600 dark:text-slate-400'
+                    };
+
+                    taskContainer.innerHTML = state.tasks.map(t => `
+                        <div class="p-3 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200/80 dark:border-slate-700/70 flex items-center justify-between gap-2.5 group transition hover:border-indigo-500/40">
+                            <div class="flex items-start gap-2.5 min-w-0">
+                                <input type="checkbox" ${t.completed ? 'checked' : ''} onchange="app.toggleTaskCompleted('${t.id}')" class="mt-1 w-4 h-4 accent-indigo-600 rounded cursor-pointer shrink-0">
+                                <div class="min-w-0">
+                                    <p class="text-xs sm:text-sm font-semibold text-slate-800 dark:text-slate-100 truncate ${t.completed ? 'line-through opacity-50' : ''}">${escapeHtml(t.title)}</p>
+                                    <div class="flex flex-wrap items-center gap-1.5 mt-1">
+                                        <span class="px-2 py-0.5 rounded text-[10px] font-semibold border ${priorityBadgeMap[t.priority] || ''}">${t.priority}</span>
+                                        <span class="px-2 py-0.5 rounded text-[10px] font-medium ${categoryBadgeMap[t.category] || ''}">${t.category}</span>
+                                        <span class="text-[10px] font-mono text-slate-400"><i class="fa-regular fa-clock mr-0.5"></i>${t.duration}m</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <button onclick="app.deleteTask('${t.id}')" title="Remove task" class="w-7 h-7 rounded-lg text-slate-400 hover:text-rose-500 hover:bg-rose-500/10 flex items-center justify-center shrink-0 transition">
+                                <i class="fa-solid fa-trash-can text-xs"></i>
+                            </button>
+                        </div>
+                    `).join('');
+                }
+
+                // Run Intelligent Scheduling Engine & Render Timeline
+                const { scheduledBlocks, overflowTasks, metrics } = generateSmartSchedule();
+
+                // Update Overflow Banner
+                const overflowBanner = document.getElementById('overflowAlertBanner');
+                if (overflowTasks.length > 0) {
+                    overflowBanner.classList.remove('hidden');
+                    const names = overflowTasks.map(t => t.title).join(', ');
+                    document.getElementById('overflowAlertDetails').textContent =
+                        `${overflowTasks.length} task(s) (${metrics.overflowMins} mins total) could not fit before your ${p.sleepTime} sleep target: ${names}.`;
+                } else {
+                    overflowBanner.classList.add('hidden');
+                }
+
+                // Update Top KPI Strip
+                document.getElementById('kpiEnergyScore').textContent = `${metrics.efficiencyScore}%`;
+                document.getElementById('kpiFocusHours').textContent = `${(metrics.totalFocusMins / 60).toFixed(1)}h`;
+                document.getElementById('kpiFreeBuffer').textContent = `/ ${(metrics.totalFreeMins / 60).toFixed(1)}h free`;
+                const peakNameMap = { morning: 'Morning Lark', afternoon: 'Afternoon Strider', evening: 'Evening Peak' };
+                document.getElementById('kpiPeakLabel').textContent = peakNameMap[p.peakEnergy] || 'Morning Lark';
+
+                // Subtitle
+                document.getElementById('scheduleSubtitle').textContent =
+                    `Prepared for ${p.name || 'Student'} (${isSchool ? 'School Track' : 'University Track'}) • Peak Energy: ${PEAK_WINDOWS[p.peakEnergy].label}`;
+
+                // Render Timeline Blocks
+                const timelineEl = document.getElementById('scheduleTimeline');
+                timelineEl.innerHTML = scheduledBlocks.map(block => {
+                    const timeRange = `${minsToTime(block.start)} – ${minsToTime(block.end)}`;
+                    const durMins = block.end - block.start;
+
+                    if (block.type === 'task') {
+                        const catColors = {
+                            Study: 'border-l-4 border-l-indigo-500 bg-indigo-500/5 dark:bg-indigo-500/10',
+                            Skills: 'border-l-4 border-l-cyan-500 bg-cyan-500/5 dark:bg-cyan-500/10',
+                            Wellness: 'border-l-4 border-l-emerald-500 bg-emerald-500/5 dark:bg-emerald-500/10',
+                            Chores: 'border-l-4 border-l-amber-500 bg-amber-500/5 dark:bg-amber-500/10'
+                        };
+                        return `
+                            <div class="print-item p-3.5 rounded-xl border border-slate-200/80 dark:border-slate-800 ${catColors[block.category] || ''} flex flex-col sm:flex-row sm:items-center justify-between gap-2 transition">
+                                <div class="flex items-start gap-3">
+                                    <input type="checkbox" ${block.completed ? 'checked' : ''} onchange="app.toggleTaskCompleted('${block.taskId}')" class="no-print mt-1 w-4 h-4 accent-indigo-600 rounded cursor-pointer">
+                                    <div>
+                                        <div class="flex flex-wrap items-center gap-2">
+                                            <span class="font-mono text-xs font-semibold text-indigo-600 dark:text-indigo-400">${timeRange}</span>
+                                            <span class="text-[11px] font-mono text-slate-400">(${durMins}m)</span>
+                                            ${block.isPeakSlot ? `
+                                                <span class="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-amber-500/15 text-amber-600 dark:text-amber-300 border border-amber-500/30">
+                                                    <i class="fa-solid fa-bolt mr-0.5"></i>Peak Energy Match
+                                                </span>
+                                            ` : ''}
+                                        </div>
+                                        <h4 class="font-display font-bold text-sm text-slate-900 dark:text-white mt-0.5 ${block.completed ? 'line-through opacity-50' : ''}">
+                                            ${escapeHtml(block.title)}
+                                        </h4>
+                                    </div>
+                                </div>
+                                <div class="flex items-center gap-1.5 self-end sm:self-center shrink-0">
+                                    <span class="px-2.5 py-0.5 rounded-lg text-[11px] font-semibold bg-white/80 dark:bg-slate-900/80 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300">
+                                        ${block.category}
+                                    </span>
+                                    <span class="px-2.5 py-0.5 rounded-lg text-[11px] font-semibold ${block.priority === 'High' ? 'bg-rose-500/15 text-rose-500' : block.priority === 'Medium' ? 'bg-amber-500/15 text-amber-500' : 'bg-emerald-500/15 text-emerald-500'}">
+                                        ${block.priority}
+                                    </span>
+                                </div>
+                            </div>
+                        `;
+                    }
+
+                    if (block.type === 'fixed') {
+                        return `
+                            <div class="print-item p-3 rounded-xl bg-slate-100 dark:bg-slate-800/90 border border-slate-300/70 dark:border-slate-700 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-8 h-8 rounded-lg bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-300 flex items-center justify-center shrink-0">
+                                        <i class="fa-solid ${block.icon} text-xs"></i>
+                                    </div>
+                                    <div>
+                                        <span class="font-mono text-xs font-semibold text-slate-500 dark:text-slate-400">${timeRange} (${durMins}m)</span>
+                                        <h4 class="font-semibold text-xs sm:text-sm text-slate-800 dark:text-slate-200">${escapeHtml(block.title)}</h4>
+                                    </div>
+                                </div>
+                                <span class="px-2.5 py-0.5 rounded-lg text-[10px] font-semibold uppercase tracking-wider bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300 self-end sm:self-center">
+                                    ${block.badge}
+                                </span>
+                            </div>
+                        `;
+                    }
+
+                    if (block.type === 'meal' || block.type === 'break' || block.type === 'reflection') {
+                        const styleMap = {
+                            meal: 'bg-emerald-500/5 border-emerald-500/20 text-emerald-700 dark:text-emerald-300',
+                            break: 'bg-cyan-500/5 border-cyan-500/20 text-cyan-700 dark:text-cyan-300',
+                            reflection: 'bg-violet-500/5 border-violet-500/20 text-violet-700 dark:text-violet-300'
+                        };
+                        return `
+                            <div class="print-item px-3.5 py-2.5 rounded-xl border ${styleMap[block.type]} flex items-center justify-between gap-2 text-xs">
+                                <div class="flex items-center gap-2.5">
+                                    <i class="fa-solid ${block.icon}"></i>
+                                    <span class="font-mono font-medium opacity-80">${timeRange}</span>
+                                    <span class="font-semibold">${escapeHtml(block.title)}</span>
+                                </div>
+                                <span class="text-[10px] font-mono uppercase px-2 py-0.5 rounded bg-white/50 dark:bg-slate-900/50">${block.badge}</span>
+                            </div>
+                        `;
+                    }
+
+                    // Buffer slot
+                    return `
+                        <div class="print-item px-3.5 py-2.5 rounded-xl border border-dashed border-slate-200 dark:border-slate-800 text-slate-500 dark:text-slate-400 flex items-center justify-between gap-2 text-xs">
+                            <div class="flex items-center gap-2.5">
+                                <i class="fa-regular fa-compass"></i>
+                                <span class="font-mono">${timeRange} (${durMins}m)</span>
+                                <span>${escapeHtml(block.title)}</span>
+                            </div>
+                            <span class="text-[10px] font-mono">Free Slot</span>
+                        </div>
+                    `;
+                }).join('');
+
+                // Render Habits & Reflection
+                renderHabitsAndReflection();
+            }
+
+            function renderHabitsAndReflection() {
+                const habitsEl = document.getElementById('habitsContainer');
+                const doneCount = state.habits.filter(h => h.done).length;
+                const totalHabits = state.habits.length || 1;
+                const pct = Math.round((doneCount / totalHabits) * 100);
+
+                document.getElementById('habitPercentageBadge').textContent = `${doneCount}/${totalHabits} Completed (${pct}%)`;
+                document.getElementById('habitProgressBar').style.width = `${pct}%`;
+                document.getElementById('kpiHabitProgress').textContent = `${pct}%`;
+
+                habitsEl.innerHTML = state.habits.map(h => `
+                    <label class="p-3 rounded-xl border ${h.done ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-900 dark:text-emerald-200' : 'bg-slate-50 dark:bg-slate-800/50 border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300'} flex items-center gap-3 cursor-pointer transition hover:border-indigo-400">
+                        <input type="checkbox" ${h.done ? 'checked' : ''} onchange="app.toggleHabit('${h.id}')" class="w-4 h-4 accent-emerald-500 rounded cursor-pointer">
+                        <span class="text-xs font-semibold ${h.done ? 'line-through opacity-80' : ''}">${escapeHtml(h.label)}</span>
+                    </label>
+                `).join('');
+
+                const refInput = document.getElementById('dailyReflectionInput');
+                if (refInput && document.activeElement !== refInput) {
+                    refInput.value = state.reflection || '';
+                }
+            }
+
+            // ==========================================
+            // MODULE 2: SMART RESOURCE & CAREER HUB
+            // ==========================================
+            function renderResourceHub() {
+                const isSchool = state.profile.studentType === 'school';
+                const activeInterest = state.interestFilter;
+                const searchQuery = (document.getElementById('resourceSearchInput')?.value || '').trim().toLowerCase();
+
+                // Update Mode Buttons in Hub Banner
+                const schoolBtn = document.getElementById('hubModeBtn-school');
+                const collegeBtn = document.getElementById('hubModeBtn-college');
+
+                if (isSchool) {
+                    schoolBtn.className = 'px-4 py-2.5 rounded-xl text-xs sm:text-sm font-semibold transition flex items-center gap-2 bg-indigo-600 text-white shadow-lg shadow-indigo-500/30';
+                    collegeBtn.className = 'px-4 py-2.5 rounded-xl text-xs sm:text-sm font-semibold transition flex items-center gap-2 text-slate-400 hover:text-white';
+                    document.getElementById('hubBannerModePill').textContent = 'School Student Mode • K-12 & High School Foundation Hub';
+                    document.getElementById('hubMainHeading').textContent = 'Curated Free Learning Resources & Interactive Labs';
+                    document.getElementById('hubMainSubtext').textContent =
+                        'Discover 100% free YouTube learning playlists, OpenStax open-access textbooks, MIT OCW High School modules, and interactive practice portals—and schedule study blocks in 1 click.';
+                } else {
+                    collegeBtn.className = 'px-4 py-2.5 rounded-xl text-xs sm:text-sm font-semibold transition flex items-center gap-2 bg-indigo-600 text-white shadow-lg shadow-indigo-500/30';
+                    schoolBtn.className = 'px-4 py-2.5 rounded-xl text-xs sm:text-sm font-semibold transition flex items-center gap-2 text-slate-400 hover:text-white';
+                    document.getElementById('hubBannerModePill').textContent = 'College / University Mode • Career & Fellowship Launchpad';
+                    document.getElementById('hubMainHeading').textContent = 'Live Internship, Fellowship & Opportunity Board';
+                    document.getElementById('hubMainSubtext').textContent =
+                        'Explore remote/hybrid internships, open-source fellowships, virtual experience programs, and tailored resume/interview playbooks matched to your academic track.';
+                }
+
+                // Highlight Interest Filter Pills
+                document.querySelectorAll('.interest-pill').forEach(btn => {
+                    const pillTrack = btn.getAttribute('data-interest');
+                    if (pillTrack === activeInterest) {
+                        btn.className = 'interest-pill px-3.5 py-2 rounded-xl text-xs font-semibold whitespace-nowrap transition bg-indigo-600 text-white shadow-sm';
+                    } else {
+                        btn.className = 'interest-pill px-3.5 py-2 rounded-xl text-xs font-semibold whitespace-nowrap transition bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700';
+                    }
+                });
+
+                const container = document.getElementById('resourceHubDynamicContainer');
+
+                if (isSchool) {
+                    // Filter School Resources
+                    const filtered = SCHOOL_RESOURCES.filter(item => {
+                        const matchesTrack = activeInterest === 'all' || item.field === activeInterest;
+                        const matchesQuery = !searchQuery ||
+                            item.title.toLowerCase().includes(searchQuery) ||
+                            item.provider.toLowerCase().includes(searchQuery) ||
+                            item.tags.some(t => t.toLowerCase().includes(searchQuery));
+                        return matchesTrack && matchesQuery;
+                    });
+
+                    container.innerHTML = `
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                            ${filtered.map(res => `
+                                <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200/80 dark:border-slate-800 p-5 shadow-sm flex flex-col justify-between gap-4 hover:border-indigo-500/50 transition">
+                                    <div class="space-y-2.5">
+                                        <div class="flex items-center justify-between gap-2">
+                                            <span class="px-2.5 py-1 rounded-lg text-[11px] font-semibold bg-indigo-500/10 text-indigo-600 dark:text-indigo-400">
+                                                ${escapeHtml(res.type)}
+                                            </span>
+                                            <span class="text-xs font-mono text-slate-400">${escapeHtml(res.duration)}</span>
+                                        </div>
+                                        <a href="${res.url}" target="_blank" rel="noopener noreferrer" onclick="app.openExternalLink('${res.url}', event)" class="block font-display font-bold text-base text-slate-900 dark:text-white hover:text-indigo-600 dark:hover:text-indigo-400 hover:underline transition">
+                                            ${escapeHtml(res.title)}
+                                        </a>
+                                        <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
+                                            ${escapeHtml(res.description)}
+                                        </p>
+                                        <div class="flex flex-wrap gap-1.5 pt-1">
+                                            ${res.tags.map(tag => `
+                                                <span class="px-2 py-0.5 rounded-md text-[10px] font-medium bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">#${escapeHtml(tag)}</span>
+                                            `).join('')}
+                                        </div>
+                                    </div>
+
+                                    <div class="pt-3 border-t border-slate-100 dark:border-slate-800 flex flex-wrap items-center justify-between gap-2">
+                                        <span class="text-[11px] font-semibold text-slate-500 dark:text-slate-400">
+                                            <i class="fa-solid fa-building-columns mr-1 text-indigo-400"></i>${escapeHtml(res.provider)}
+                                        </span>
+                                        <div class="flex items-center gap-2">
+                                            <button onclick="app.addResourceToPlanner('${escapeHtml(res.title)}', 'Study')" class="px-3 py-1.5 rounded-xl text-xs font-semibold bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20 transition">
+                                                <i class="fa-solid fa-plus mr-1"></i>Schedule 45m
+                                            </button>
+                                            <a href="${res.url}" target="_blank" rel="noopener noreferrer" onclick="app.openExternalLink('${res.url}', event)" class="px-3 py-1.5 rounded-xl text-xs font-semibold bg-indigo-600 hover:bg-indigo-500 text-white transition inline-flex items-center gap-1">
+                                                <span>Open Resource</span>
+                                                <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    `;
+                } else {
+                    // Filter College Internships
+                    const filtered = COLLEGE_INTERNSHIPS.filter(item => {
+                        const matchesTrack = activeInterest === 'all' || item.field === activeInterest;
+                        const matchesQuery = !searchQuery ||
+                            item.role.toLowerCase().includes(searchQuery) ||
+                            item.org.toLowerCase().includes(searchQuery) ||
+                            item.tags.some(t => t.toLowerCase().includes(searchQuery));
+                        return matchesTrack && matchesQuery;
+                    });
+
+                    // Direct Career Portals Quick Bar + Internship Cards
+                    container.innerHTML = `
+                        <!-- Direct Global Career Portals Bar -->
+                        <div class="p-4 rounded-2xl bg-indigo-500/5 border border-indigo-500/20 flex flex-wrap items-center justify-between gap-3">
+                            <div class="flex items-center gap-2.5">
+                                <i class="fa-solid fa-satellite-dish text-indigo-500"></i>
+                                <span class="text-xs font-semibold text-slate-800 dark:text-slate-200">Direct Verified Career Portals:</span>
+                            </div>
+                            <div class="flex flex-wrap items-center gap-2">
+                                <a href="https://www.linkedin.com/jobs/" target="_blank" rel="noopener noreferrer" onclick="app.openExternalLink('https://www.linkedin.com/jobs/', event)" class="px-3 py-1.5 rounded-xl text-xs font-semibold bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 hover:border-indigo-500 transition inline-flex items-center gap-1.5">
+                                    <i class="fa-brands fa-linkedin text-sky-500"></i> LinkedIn Internships
+                                </a>
+                                <a href="https://summerofcode.withgoogle.com/" target="_blank" rel="noopener noreferrer" onclick="app.openExternalLink('https://summerofcode.withgoogle.com/', event)" class="px-3 py-1.5 rounded-xl text-xs font-semibold bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 hover:border-indigo-500 transition inline-flex items-center gap-1.5">
+                                    <i class="fa-brands fa-google text-amber-500"></i> Google Summer of Code
+                                </a>
+                                <a href="https://www.theforage.com/" target="_blank" rel="noopener noreferrer" onclick="app.openExternalLink('https://www.theforage.com/', event)" class="px-3 py-1.5 rounded-xl text-xs font-semibold bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 hover:border-indigo-500 transition inline-flex items-center gap-1.5">
+                                    <i class="fa-solid fa-laptop-code text-emerald-500"></i> Forage Virtual Internships
+                                </a>
+                                <a href="https://github.com/BuildWithIndia" target="_blank" rel="noopener noreferrer" onclick="app.openExternalLink('https://github.com/BuildWithIndia', event)" class="px-3 py-1.5 rounded-xl text-xs font-semibold bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 hover:border-indigo-500 transition inline-flex items-center gap-1.5">
+                                    <i class="fa-brands fa-github"></i> Open Source Fellowships
+                                </a>
+                            </div>
+                        </div>
+
+                        <!-- Simulated Live Internship Cards -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                            ${filtered.map(item => `
+                                <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200/80 dark:border-slate-800 p-5 shadow-sm flex flex-col justify-between gap-4 hover:border-indigo-500/50 transition">
+                                    <div class="space-y-3">
+                                        <div class="flex flex-wrap items-center justify-between gap-2">
+                                            <span class="px-2.5 py-1 rounded-lg text-[11px] font-semibold bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">
+                                                <i class="fa-solid fa-earth-americas mr-1"></i>${escapeHtml(item.mode)}
+                                            </span>
+                                            <div class="flex items-center gap-1.5">
+                                                <span class="px-2.5 py-1 rounded-lg text-[11px] font-mono font-semibold bg-amber-500/10 text-amber-600 dark:text-amber-400">
+                                                    ${escapeHtml(item.stipend)}
+                                                </span>
+                                                <span class="text-xs font-mono text-slate-400">${escapeHtml(item.duration)}</span>
+                                            </div>
+                                        </div>
+
+                                        <div>
+                                            <a href="${item.portalUrl}" target="_blank" rel="noopener noreferrer" onclick="app.openExternalLink('${item.portalUrl}', event)" class="block font-display font-bold text-base text-slate-900 dark:text-white hover:text-indigo-600 dark:hover:text-indigo-400 hover:underline transition">
+                                                ${escapeHtml(item.role)}
+                                            </a>
+                                            <p class="text-xs font-medium text-indigo-600 dark:text-indigo-400 mt-0.5">${escapeHtml(item.org)}</p>
+                                        </div>
+
+                                        <div class="flex flex-wrap gap-1.5">
+                                            ${item.tags.map(tag => `
+                                                <span class="px-2.5 py-0.5 rounded-md text-[11px] font-medium bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300">${escapeHtml(tag)}</span>
+                                            `).join('')}
+                                        </div>
+                                    </div>
+
+                                    <div class="pt-3 border-t border-slate-100 dark:border-slate-800 flex flex-wrap items-center justify-between gap-2">
+                                        <button onclick="app.openStrategyModal('${item.id}')" class="px-3 py-1.5 rounded-xl text-xs font-semibold bg-indigo-500/10 hover:bg-indigo-500/20 text-indigo-600 dark:text-indigo-300 border border-indigo-500/20 transition flex items-center gap-1.5">
+                                            <i class="fa-solid fa-lightbulb"></i>
+                                            <span>Application Playbook</span>
+                                        </button>
+
+                                        <div class="flex items-center gap-2">
+                                            <button onclick="app.addResourceToPlanner('${escapeHtml(item.strategy.prepTaskTitle)}', 'Skills')" class="px-3 py-1.5 rounded-xl text-xs font-semibold bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 transition">
+                                                + Prep Task
+                                            </button>
+                                            <a href="${item.portalUrl}" target="_blank" rel="noopener noreferrer" onclick="app.openExternalLink('${item.portalUrl}', event)" class="px-3 py-1.5 rounded-xl text-xs font-semibold bg-indigo-600 hover:bg-indigo-500 text-white transition inline-flex items-center gap-1">
+                                                <span>Apply Here</span>
+                                                <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    `;
+                }
+            }
+
+            // ==========================================
+            // MODULE 3: PORTFOLIO CARD & EXPORT SUITE
+            // ==========================================
+            function renderPortfolioModule() {
+                const p = state.profile;
+                const name = p.name || 'Student Developer';
+                const initials = name.split(' ').map(part => part[0]).join('').substring(0, 2).toUpperCase() || 'SS';
+                const trackName = TRACK_LABELS[p.interest] || 'Computer Science & AI';
+                const levelName = p.studentType === 'school' ? 'School Student (K-12)' : 'College / University Student';
+                const peakLabel = PEAK_WINDOWS[p.peakEnergy]?.label.split(' (')[0] || 'Morning Lark';
+                const focusHrs = (lastComputedMetrics.totalFocusMins / 60).toFixed(1);
+
+                const doneHabits = state.habits.filter(h => h.done).length;
+                const habitPct = Math.round((doneHabits / (state.habits.length || 1)) * 100);
+                const highTasks = state.tasks.filter(t => t.priority === 'High');
+
+                // Update Visual Portfolio Card
+                document.getElementById('cardAvatarInitials').textContent = initials;
+                document.getElementById('cardStudentName').textContent = name;
+                document.getElementById('cardStudentSubtitle').textContent = `${levelName} • ${trackName}`;
+                document.getElementById('cardEfficiencyScore').textContent = `${lastComputedMetrics.efficiencyScore}%`;
+                document.getElementById('cardChronotype').textContent = peakLabel;
+                document.getElementById('cardDeepWork').textContent = `${focusHrs} Hours`;
+                document.getElementById('cardHabitScore').textContent = `${habitPct}% Today`;
+                document.getElementById('cardHighTasksCount').textContent = `${highTasks.length} Locked`;
+
+                const topPillsContainer = document.getElementById('cardTopTasksPills');
+                const displayTasks = state.tasks.slice(0, 4);
+                topPillsContainer.innerHTML = displayTasks.map(t => `
+                    <span class="px-3 py-1.5 rounded-xl text-xs font-medium bg-white/10 border border-white/15 text-white flex items-center gap-1.5">
+                        <span class="w-2 h-2 rounded-full ${t.priority === 'High' ? 'bg-rose-400' : 'bg-emerald-400'}"></span>
+                        <span>${escapeHtml(t.title)} (${t.duration}m)</span>
+                    </span>
+                `).join('');
+
+                // Generate GitHub README Markdown Snippet
+                const mdSnippet = `### ⚡ ${name} — Smart Student Career & Learning Hub
+![Energy Efficiency](https://img.shields.io/badge/Energy_Alignment-${lastComputedMetrics.efficiencyScore}%25-10b981?style=for-the-badge)
+![Focus Track](https://img.shields.io/badge/Track-${encodeURIComponent(trackName)}-6366f1?style=for-the-badge)
+![Deep Work](https://img.shields.io/badge/Daily_Focus-${focusHrs}_Hours-06b6d4?style=for-the-badge)
+
+- **Academic Stage:** ${levelName}
+- **Peak Chronotype:** ${PEAK_WINDOWS[p.peakEnergy]?.label}
+- **Habit Consistency:** ${doneHabits}/${state.habits.length} Daily Habits Checked (${habitPct}%)
+- **Top Priority Goals:**
+${state.tasks.slice(0, 3).map(t => `  - [${t.completed ? 'x' : ' '}] **${t.title}** (${t.duration} mins • ${t.priority})`).join('\n')}`;
+
+                document.getElementById('githubMarkdownPreview').textContent = mdSnippet;
+
+                // Generate LinkedIn Post Text
+                const linkedInText = `🚀 Excited to showcase my daily learning architecture powered by the Smart Student Career & Learning Hub!
+
+⚡ Energy Alignment Score: ${lastComputedMetrics.efficiencyScore}% (${peakLabel} Chronotype)
+🎯 Primary Focus Track: ${trackName}
+⏱️ Scheduled Deep Work: ${focusHrs} Hours + Pomodoro Recovery Breaks
+🌱 Habit Consistency: ${habitPct}% Completed Today
+
+Built with HTML5, Tailwind CSS, and Modular Vanilla JS with a Circadian Energy Scheduling Engine & Dynamic Opportunity Finder. #StudentDeveloper #Productivity #WebDevelopment #CareerGrowth`;
+
+                document.getElementById('linkedinPostPreview').value = linkedInText;
+            }
+
+            // ==========================================
+            // INTERACTIVE EVENT HANDLERS
+            // ==========================================
+            function switchTab(tabId) {
+                state.activeTab = tabId;
+                ['planner', 'resources', 'portfolio'].forEach(id => {
+                    const sec = document.getElementById(`tabContent-${id}`);
+                    const btn = document.getElementById(`tabBtn-${id}`);
+                    if (id === tabId) {
+                        sec.classList.remove('hidden');
+                        btn.className = 'tab-btn flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs sm:text-sm font-semibold whitespace-nowrap transition-all bg-indigo-600 text-white shadow-md shadow-indigo-500/20';
+                    } else {
+                        sec.classList.add('hidden');
+                        btn.className = 'tab-btn flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs sm:text-sm font-semibold whitespace-nowrap transition-all text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800';
+                    }
+                });
+
+                if (tabId === 'planner') renderPlannerModule();
+                if (tabId === 'resources') renderResourceHub();
+                if (tabId === 'portfolio') {
+                    renderPlannerModule();
+                    renderPortfolioModule();
+                }
+                saveState();
+            }
+
+            function updateProfileFromUI() {
+                state.profile.name = document.getElementById('profileName').value;
+                state.profile.studentType = document.getElementById('profileType').value;
+                state.profile.interest = document.getElementById('profileInterest').value;
+                state.profile.wakeTime = document.getElementById('wakeTime').value || '06:30';
+                state.profile.sleepTime = document.getElementById('sleepTime').value || '22:30';
+                state.profile.hasFixedBlock = document.getElementById('hasFixedBlock').checked;
+                state.profile.fixedStart = document.getElementById('fixedStart').value || '09:00';
+                state.profile.fixedEnd = document.getElementById('fixedEnd').value || '14:30';
+
+                // Also sync resource hub interest filter to user's selected interest
+                state.interestFilter = state.profile.interest;
+
+                saveState();
+                renderPlannerModule();
+                renderResourceHub();
+                renderPortfolioModule();
+            }
+
+            function setPeakEnergy(peakKey) {
+                state.profile.peakEnergy = peakKey;
+                saveState();
+                renderPlannerModule();
+                renderPortfolioModule();
+                showToast(`Peak cognitive energy window set to ${PEAK_WINDOWS[peakKey].label}`);
+            }
+
+            function handleAddTask(e) {
+                e.preventDefault();
+                const titleEl = document.getElementById('taskTitle');
+                const title = titleEl.value.trim();
+                if (!title) return;
+
+                const duration = Number(document.getElementById('taskDuration').value) || 60;
+                const priority = document.getElementById('taskPriority').value;
+                const category = document.getElementById('taskCategory').value;
+
+                state.tasks.unshift({
+                    id: 'task-' + Date.now(),
+                    title,
+                    duration,
+                    priority,
+                    category,
+                    completed: false
+                });
+
+                titleEl.value = '';
+                saveState();
+                renderPlannerModule();
+                renderPortfolioModule();
+                showToast(`Added "${title}" and optimized schedule!`);
+            }
+
+            function toggleTaskCompleted(taskId) {
+                const task = state.tasks.find(t => t.id === taskId);
+                if (task) {
+                    task.completed = !task.completed;
+                    saveState();
+                    renderPlannerModule();
+                    renderPortfolioModule();
+                }
+            }
+
+            function deleteTask(taskId) {
+                state.tasks = state.tasks.filter(t => t.id !== taskId);
+                saveState();
+                renderPlannerModule();
+                renderPortfolioModule();
+                showToast('Task removed from queue.');
+            }
+
+            function clearAllTasks() {
+                state.tasks = [];
+                saveState();
+                renderPlannerModule();
+                renderPortfolioModule();
+                showToast('Cleared all queued tasks.');
+            }
+
+            function trimOverflowTasks() {
+                // Automatically remove Low priority tasks first, or longest task if still overflowing
+                const beforeCount = state.tasks.length;
+                state.tasks = state.tasks.filter(t => t.priority !== 'Low');
+                if (state.tasks.length === beforeCount && state.tasks.length > 0) {
+                    state.tasks.pop();
+                }
+                saveState();
+                renderPlannerModule();
+                renderPortfolioModule();
+                showToast('Deferred lower-priority tasks to resolve schedule overflow!');
+            }
+
+            function loadPresetTasks(presetType) {
+                if (presetType === 'exam') {
+                    state.tasks = [
+                        { id: 'p-1', title: 'Mock Exam Paper Timed Practice (Full Section)', duration: 90, priority: 'High', category: 'Study', completed: false },
+                        { id: 'p-2', title: 'Active Recall Flashcards & Error Log Analysis', duration: 60, priority: 'High', category: 'Study', completed: false },
+                        { id: 'p-3', title: 'Coding / Lab Implementation Sprint', duration: 60, priority: 'Medium', category: 'Skills', completed: false },
+                        { id: 'p-4', title: 'Outdoor Walk & Post-Study Stretch', duration: 30, priority: 'Medium', category: 'Wellness', completed: false }
+                    ];
+                    saveState();
+                    renderPlannerModule();
+                    renderPortfolioModule();
+                    showToast('Loaded Exam & Skill Sprint Preset!');
+                }
+            }
+
+            function toggleHabit(habitId) {
+                const h = state.habits.find(item => item.id === habitId);
+                if (h) {
+                    h.done = !h.done;
+                    saveState();
+                    renderHabitsAndReflection();
+                    renderPortfolioModule();
+                }
+            }
+
+            function saveReflection(val) {
+                state.reflection = val;
+                saveState();
+                const indicator = document.getElementById('reflectionSavedIndicator');
+                if (indicator) {
+                    indicator.classList.remove('opacity-0');
+                    clearTimeout(window._refSaveTimer);
+                    window._refSaveTimer = setTimeout(() => indicator.classList.add('opacity-0'), 1500);
+                }
+            }
+
+            function toggleStudentTypeQuick() {
+                state.profile.studentType = state.profile.studentType === 'school' ? 'college' : 'school';
+                saveState();
+                renderPlannerModule();
+                renderResourceHub();
+                renderPortfolioModule();
+                showToast(`Switched to ${state.profile.studentType === 'school' ? 'School Student' : 'College / University'} mode!`);
+            }
+
+            function setResourceStudentMode(mode) {
+                state.profile.studentType = mode;
+                saveState();
+                renderPlannerModule();
+                renderResourceHub();
+                renderPortfolioModule();
+            }
+
+            function setInterestFilter(track) {
+                state.interestFilter = track;
+                if (track !== 'all') {
+                    state.profile.interest = track;
+                }
+                saveState();
+                renderPlannerModule();
+                renderResourceHub();
+                renderPortfolioModule();
+            }
+
+            function addResourceToPlanner(title, category = 'Study') {
+                state.tasks.unshift({
+                    id: 'res-' + Date.now(),
+                    title,
+                    duration: 45,
+                    priority: 'High',
+                    category,
+                    completed: false
+                });
+                saveState();
+                renderPlannerModule();
+                renderPortfolioModule();
+                showToast(`Added "${title}" (45m) to your AI Daily Schedule!`);
+            }
+
+            function openStrategyModal(internshipId) {
+                const item = COLLEGE_INTERNSHIPS.find(i => i.id === internshipId);
+                if (!item) return;
+
+                document.getElementById('modalRoleOrg').textContent = item.org;
+                document.getElementById('modalRoleTitle').textContent = item.role;
+                document.getElementById('modalStrategyBody').innerHTML = `
+                    <div class="p-3.5 rounded-2xl bg-indigo-500/10 border border-indigo-500/20 space-y-1">
+                        <span class="text-xs font-bold text-indigo-600 dark:text-indigo-400 uppercase tracking-wider block">
+                            <i class="fa-solid fa-file-lines mr-1"></i>Resume Impact Strategy
+                        </span>
+                        <p class="text-xs sm:text-sm">${escapeHtml(item.strategy.resumeTip)}</p>
+                    </div>
+                    <div class="p-3.5 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 space-y-1">
+                        <span class="text-xs font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-wider block">
+                            <i class="fa-solid fa-comments mr-1"></i>Interview & Selection Edge
+                        </span>
+                        <p class="text-xs sm:text-sm">${escapeHtml(item.strategy.interviewTip)}</p>
+                    </div>
+                    <div class="p-3 rounded-xl bg-slate-100 dark:bg-slate-800 text-xs flex items-center justify-between">
+                        <span class="font-semibold">Recommended Action Block:</span>
+                        <span class="font-mono text-indigo-500">${escapeHtml(item.strategy.prepTaskTitle)}</span>
+                    </div>
+                `;
+
+                const addBtn = document.getElementById('modalAddPrepTaskBtn');
+                addBtn.onclick = () => {
+                    addResourceToPlanner(item.strategy.prepTaskTitle, 'Skills');
+                    closeStrategyModal();
+                };
+
+                document.getElementById('strategyModal').classList.remove('hidden');
+            }
+
+            function closeStrategyModal() {
+                document.getElementById('strategyModal').classList.add('hidden');
+            }
+
+            function setPortfolioCardTheme(themeName) {
+                const card = document.getElementById('portfolioVisualCard');
+                const themes = {
+                    indigo: 'rounded-3xl p-6 sm:p-8 bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-900 text-white border border-indigo-500/40 shadow-2xl relative overflow-hidden',
+                    emerald: 'rounded-3xl p-6 sm:p-8 bg-gradient-to-br from-slate-900 via-emerald-950 to-slate-950 text-white border border-emerald-500/40 shadow-2xl relative overflow-hidden',
+                    sunset: 'rounded-3xl p-6 sm:p-8 bg-gradient-to-br from-slate-900 via-rose-950 to-amber-950 text-white border border-rose-500/40 shadow-2xl relative overflow-hidden'
+                };
+                card.className = themes[themeName] || themes.indigo;
+            }
+
+            // Clipboard Helper using document.execCommand('copy') for full iFrame compatibility
+            function copyTextToClipboard(text, successMsg) {
+                const tempArea = document.createElement('textarea');
+                tempArea.value = text;
+                tempArea.style.position = 'fixed';
+                tempArea.style.left = '-9999px';
+                document.body.appendChild(tempArea);
+                tempArea.select();
+                try {
+                    document.execCommand('copy');
+                    showToast(successMsg);
+                } catch (err) {
+                    showToast('Copy failed — please select and copy manually.');
+                }
+                document.body.removeChild(tempArea);
+            }
+
+            function copyGitHubMarkdown() {
+                const md = document.getElementById('githubMarkdownPreview').textContent;
+                copyTextToClipboard(md, 'GitHub README Markdown copied to clipboard!');
+            }
+
+            function copyLinkedInPost() {
+                const post = document.getElementById('linkedinPostPreview').value;
+                copyTextToClipboard(post, 'LinkedIn Showcase Post copied to clipboard!');
+            }
+
+            function openExternalLink(url, e) {
+                if (e) e.preventDefault();
+                try {
+                    let win = window.open(url, '_blank', 'noopener,noreferrer');
+                    if (!win) {
+                        showToast('⚠️ Popups blocked by this preview window. Right-click the link and "Open in new tab", or deploy the app!');
+                    }
+                } catch (err) {
+                    showToast('⚠️ External links are restricted in this preview. Deploy your app to use them normally!');
+                }
+            }
+
+            function printSchedule() {
+                // Ensure planner tab is visible when printing
+                if (state.activeTab !== 'planner') {
+                    switchTab('planner');
+                }
+                setTimeout(() => {
+                    window.print();
+                }, 150);
+            }
+
+            function toggleTheme() {
+                const html = document.documentElement;
+                const isDark = html.classList.toggle('dark');
+                state.theme = isDark ? 'dark' : 'light';
+                document.getElementById('themeIcon').className = isDark ? 'fa-solid fa-sun' : 'fa-solid fa-moon';
+                saveState();
+            }
+
+            function resetDemoData() {
+                localStorage.removeItem(STORAGE_KEY);
+                state = getDefaultState();
+                saveState();
+                switchTab('planner');
+                renderPlannerModule();
+                renderResourceHub();
+                renderPortfolioModule();
+                showToast('Demo portfolio state restored!');
+            }
+
+            function showToast(message) {
+                const container = document.getElementById('toastContainer');
+                const toast = document.createElement('div');
+                toast.className = 'pointer-events-auto p-3.5 rounded-2xl bg-slate-900 dark:bg-white text-white dark:text-slate-900 shadow-xl border border-slate-700/50 flex items-center gap-2.5 text-xs font-semibold transition-all duration-300';
+                toast.innerHTML = `
+                    <i class="fa-solid fa-circle-check text-emerald-400 dark:text-emerald-600 text-sm"></i>
+                    <span>${escapeHtml(message)}</span>
+                `;
+                container.appendChild(toast);
+                setTimeout(() => {
+                    toast.classList.add('opacity-0', 'translate-y-2');
+                    setTimeout(() => toast.remove(), 300);
+                }, 2800);
+            }
+
+            function escapeHtml(str) {
+                return String(str || '')
+                    .replace(/&/g, '&amp;')
+                    .replace(/</g, '&lt;')
+                    .replace(/>/g, '&gt;')
+                    .replace(/"/g, '&quot;')
+                    .replace(/'/g, '&#039;');
+            }
+
+            function init() {
+                loadState();
+                // Apply saved theme
+                if (state.theme === 'light') {
+                    document.documentElement.classList.remove('dark');
+                    document.getElementById('themeIcon').className = 'fa-solid fa-moon';
+                } else {
+                    document.documentElement.classList.add('dark');
+                    document.getElementById('themeIcon').className = 'fa-solid fa-sun';
+                }
+                state.interestFilter = state.profile.interest || 'all';
+                switchTab(state.activeTab || 'planner');
+                renderPlannerModule();
+                renderResourceHub();
+                renderPortfolioModule();
+            }
+
+            return {
+                init,
+                switchTab,
+                updateProfileFromUI,
+                setPeakEnergy,
+                handleAddTask,
+                toggleTaskCompleted,
+                deleteTask,
+                clearAllTasks,
+                trimOverflowTasks,
+                loadPresetTasks,
+                toggleHabit,
+                saveReflection,
+                toggleStudentTypeQuick,
+                setResourceStudentMode,
+                setInterestFilter,
+                 renderResourceHub,
+                addResourceToPlanner,
+                openStrategyModal,
+                closeStrategyModal,
+                setPortfolioCardTheme,
+                copyGitHubMarkdown,
+                copyLinkedInPost,
+                openExternalLink,
+                printSchedule,
+                toggleTheme,
+                resetDemoData
+            };
+        })();
+
+        window.addEventListener('DOMContentLoaded', app.init);
+    </script>
+</body>
+</html>
